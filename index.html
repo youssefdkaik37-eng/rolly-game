@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة ROLLY الملوكية والألعاب</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #f3ba2f;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        h1, h2, h3 { text-align: center; color: var(--primary); }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        
+        .btn { width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .bank-btn { position: relative; background: #334155; color: white; text-align: right; padding-right: 20px; }
+        .badge-soon { position: absolute; left: 15px; top: 15px; background: var(--danger); color: white; font-size: 12px; padding: 2px 8px; border-radius: 4px; }
+        
+        /* محاكاة البارشيس 100% */
+        .game-box { background: #0f172a; padding: 20px; border-radius: 10px; border: 2px solid var(--primary); text-align: center; margin-top: 15px; }
+        .vs-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .player-profile { text-align: center; width: 45%; }
+        .player-avatar { width: 60px; height: 60px; background: #475569; border-radius: 50%; margin: auto; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid var(--primary); }
+        .parchisi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; background: #1e293b; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #334155; }
+        .token-status { background: #0f172a; padding: 8px; border-radius: 4px; font-size: 13px; font-weight: bold; }
+        .dice-result { font-size: 38px; margin: 5px 0; color: var(--primary); font-weight: bold; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: var(--card-bg); padding: 25px; border-radius: 12px; max-width: 500px; width: 90%; text-align: right; max-height: 80vh; overflow-y: auto; }
+        
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; box-sizing: border-box; }
+        .wallet-info { background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 18px; border-left: 5px solid var(--success); }
+        
+        .code-section { background: #0f172a; padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px dashed var(--primary); }
+        .alert-box { display: none; background: #1e293b; border: 2px solid var(--success); padding: 20px; border-radius: 10px; margin-top: 15px; text-align: center; }
+        .email-display { background: #0f172a; padding: 10px; border-radius: 6px; font-weight: bold; color: var(--primary); font-size: 18px; margin: 10px 0; display: inline-block; border: 1px solid #334155; padding-left: 15px; padding-right: 15px; }
+    </style>
+</head>
+<body>
+
+<!-- شاشة الموافقة على القوانين -->
+<div id="termsModal" class="modal" style="display: flex;">
+    <div class="modal-content">
+        <h2>📜 شروط الاستخدام وقوانين المنصة</h2>
+        <p>مرحباً بك في منصة التحديات الرقمية. يرجى قراءة القوانين والموافقة عليها قبل الدخول:</p>
+        <div style="background: #0f172a; padding: 15px; border-radius: 6px; font-size: 14px; max-height: 200px; overflow-y: auto;">
+            1. يجب أن يكون عمرك فوق 18 سنة للاستخدام.<br>
+            2. المنصة تعتمد على نظام جولات تحدي تفاعلية ضد لاعبين حقيقيين من مختلف أنحاء العالم عبر الإنترنت.<br>
+            3. يمنع استخدام أي برامج غش، وفي حال كشف ذلك يتم تجميد المحفظة فوراً.<br>
+            4. تقتطع المنصة عمولات إدارية عند الإيداع (5%)، واللعب (10%)، والسحب (5%) لتغطية تكاليف الخوادم والصيانة.<br>
+            5. عمليات السحب اليدوية تتطلب مراجعة من الإدارة وقد تستغرق من 1 إلى 24 ساعة للتحقق من سلامة الجولات ووصول الأموال.
+        </div>
+        <label style="margin-top: 15px; display: block;">
+            <input type="checkbox" id="agreeCheck" style="width: auto; margin-left: 10px;"> لقد قرأت القوانين وأوافق على كافة الشروط والخصوصية.
+        </label>
+        <button class="btn btn-primary" onclick="acceptTerms()">دخول إلى المنصة</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="wallet-info">
+        💰 رصيدك الحالي: <span id="userBalance" style="color: var(--success); font-weight: bold;">0.00</span> DH
+    </div>
+
+    <!-- شاشة القائمة الرئيسية -->
+    <div id="mainScreen" class="screen active">
+        <h1>🎮 لوحة التحكم والألعاب</h1>
+        <button class="btn btn-primary" onclick="switchScreen('gameScreen')">⚔️ دخول جولة تحدي 1 ضد 1 (Parchisi)</button>
+        <button class="btn btn-success" onclick="switchScreen('depositScreen')">📥 شحن الرصيد (إيداع)</button>
+        <button class="btn btn-danger" onclick="switchScreen('withdrawScreen')">📤 سحب الأرباح</button>
+        <button class="btn bank-btn" style="background: #475569;" onclick="switchScreen('referralScreen')">🔗 نظام الإحالة والأرباح</button>
+
+        <!-- قسم وضع كود التفعيل المطور -->
+        <div class="code-section">
+            <h3 style="margin-top: 0; font-size: 16px; color: var(--primary);">🔑 هل تملك كود تفعيل الرصيد؟</h3>
+            <p style="font-size: 13px; color: #94a3b8; margin: 5px 0;">أدخل الكود المشفر الذي استلمته لتعبئة حسابك:</p>
+            <input type="text" id="activationCodeInput" placeholder="ضع الكود المشفر هنا (مثال: RLY-100-XXXX)" style="text-transform: uppercase;">
+            <button class="btn btn-success" onclick="redeemCode()" style="padding: 10px; margin-top: 5px; font-size: 14px;">تفعيل الكود وشحن الحساب فوراً</button>
+        </div>
+    </div>
+
+    <!-- شاشة اللعب المطور (بارشيس 100% - نسبة ربح اللاعب 25% حصراً) -->
+    <div id="gameScreen" class="screen">
+        <h2>⚔️ غطاء التحدي الثنائي (1 VS 1)</h2>
+        <p style="text-align: center; color: #94a3b8;">تكلفة الدخول في الروند ثابتة: <b>20 DH (~2$)</b></p>
+        <p style="text-align: center; color: var(--success); font-weight: bold; font-size: 14px;">الصافي الممنوح للفائز بالجولة: 36 DH</p>
+        
+        <button class="btn btn-primary" id="findMatchBtn" onclick="startMatching()">البحث عن رهان ضد لاعب متصل... 🔍</button>
+
+        <div id="gameArena" class="game-box" style="display: none;">
+            <div class="vs-container">
+                <div class="player-profile">
+                    <div class="player-avatar">👤</div>
+                    <p style="font-weight: bold; margin: 5px 0; font-size: 14px;">أنت (المضيف)</p>
+                    <div class="dice-result">🎲 <span id="playerDice">-</span></div>
+                </div>
+                <div style="font-size: 20px; font-weight: bold; color: var(--danger);">VS</div>
+                <div class="player-profile">
+                    <div class="player-avatar" style="border-color: var(--danger);">🤖</div>
+                    <p id="opponentName" style="font-weight: bold; margin: 5px 0; color: var(--danger); font-size: 13px; letter-spacing: 0.5px;"></p>
+                    <div class="dice-result">🎲 <span id="systemDice">-</span></div>
+                </div>
+            </div>
+
+            <div class="parchisi-grid">
+                <div class="token-status" style="color: #60a5fa;">🔵 قِطَعك في الممر: <span id="pTokens">3</span>/4</div>
+                <div class="token-status" style="color: var(--danger);">🔴 قِطَع الخصم في الممر: <span id="sTokens">3</span>/4</div>
+                <div class="token-status" style="color: var(--success); grid-column: span 2;">🏁 المسافة المتبقية للمربع النهائي: <span id="distanceInfo">منتصف اللوح</span></div>
+            </div>
+
+            <p id="gameStatus" style="font-size: 16px; font-weight: bold; color: var(--primary); min-height: 24px;"></p>
+            <button class="btn btn-success" id="rollBtn" onclick="executeTurn()" style="display: none;">رمي النرد المزدوج للبارشيسي 🎲</button>
+        </div>
+        <button class="btn btn-danger" id="backFromGameBtn" onclick="switchScreen('mainScreen')">رجوع</button>
+    </div>
+
+    <!-- شاشة الإيداع -->
+    <div id="depositScreen" class="screen">
+        <h2>📥 شحن رصيد الحساب</h2>
+        <p style="color: var(--danger); font-size: 14px; text-align: center;">⚠️ أقل مبلغ للإيداع هو 100 درهم (تقتطع المنصة 5% عمولة معالجة يديرها النظام)</p>
+        
+        <button class="btn bank-btn" style="background: #f60;" onclick="showBankDetails('CIH', 'RIB: 6445033211021600')">CIH Bank</button>
+        <button class="btn bank-btn" style="background: #0056b3;" onclick="showBankDetails('Cash Plus', 'رقم الهاتف: 0782521290')">كاش بليس</button>
+        
+        <button class="btn bank-btn" style="background: #eed100; color: #333;" disabled>البريد بنك <span class="badge-soon">قريباً...</span></button>
+        <button class="btn bank-btn" style="background: #f3ba2f; color: #000;" disabled>Binance Pay <span class="badge-soon">قريباً...</span></button>
+
+        <div id="depositDetails" style="display: none; background: #0f172a; padding: 15px; border-radius: 8px; margin-top: 15px;">
+            <h3 id="targetBankTitle"></h3>
+            <p id="targetBankInfo" style="background: #1e293b; padding: 10px; border-radius: 5px; word-break: break-all; text-align: center; font-size: 18px; color: var(--primary); font-weight: bold;"></p>
+            <p style="color: #00ffcc; font-size: 14px;">💡 أرسل المبلغ للحساب أعلاه أولاً، ثم ارفع الإثبات واضغط على تأكيد لطلب كود تفعيل الرصيد:</p>
+            <input type="number" id="depositAmount" min="100" placeholder="المبلغ الذي أرسلته بالدرهم">
+            <input type="file" id="depositFile" accept="image/*">
+            <button class="btn btn-success" onclick="submitDepositTicket()">تأكيد وإرسال الإثبات ل مراجعة الإدارة ✅</button>
+        </div>
+
+        <div id="depositAlertBox" class="alert-box">
+            <h3 style="color: var(--success); margin-top: 0;">✅ تم تسجيل طلب الشحن الأولي برقم تذكرة معلق</h3>
+            <p style="font-size: 15px; line-height: 1.6;">المرجو الآن نسخ وإرسال سكرين شوت (إثبات الدفع) مرة أخرى يدوياً إلى الجيمايل التالي لضمان التحقق الفوري:</p>
+            <div class="email-display">mohalonadiko@gmail.com</div>
+            <p style="color: var(--primary); font-weight: bold; font-size: 15px;">⏳ انتظر من ساعة (1) إلى 4 ساعات كحد أقصى ليقوم السستم بتدقيق حساب البنك وإرسال كود التفعيل الخاص بك.</p>
+            <button class="btn btn-primary" onclick="closeAlertAndReturn()" style="margin-top: 10px; padding: 10px;">فهمت، العودة للرئيسية</button>
+        </div>
+
+        <button class="btn btn-danger" id="backFromDepositBtn" onclick="switchScreen('mainScreen')" style="margin-top: 15px;">رجوع</button>
+    </div>
+
+    <!-- شاشة السحب -->
+    <div id="withdrawScreen" class="screen">
+        <h2>📤 طلب سحب الأرباح</h2>
+        <p style="color: var(--danger); font-size: 14px; text-align: center;">⚠️ الحد الأدنى للسحب هو 200 درهم (تطبق عمولة سحب 5%)</p>
+        <input type="text" id="withdrawRib" placeholder="ضع رقم حسابك RIB أو رقم الهاتف">
+        <input type="number" id="withdrawAmount" min="200" placeholder="المبلغ المراد سحبه بالدرهم">
+        <button class="btn btn-danger" onclick="processWithdrawal()">تأكيد وإرسال طلب السحب</button>
+        <button class="btn btn-primary" onclick="switchScreen('mainScreen')">رجوع</button>
+    </div>
+
+    <!-- شاشة نظام الإحالة -->
+    <div id="referralScreen" class="screen">
+        <h2>🔗 نظام ربح الإحالات (برنامج الشركاء)</h2>
+        <p>انشر رابطك الخاص واربح عمولة 2% من كل شحنة يقوم بها أي شخص يسجل من خلالك!</p>
+        <div style="background: #0f172a; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0;">
+            <code style="color: var(--primary); font-size: 16px;">https://playrolly.com/register?ref=user8614</code>
+        </div>
+        <button class="btn btn-primary" onclick="alert('تم نسخ رابط الإحالة الخاص بك بنجاح!')">نسخ الرابط ونشره في واتساب / فيسبوك</button>
+        <button class="btn btn-danger" onclick="switchScreen('mainScreen')">رجوع</button>
+    </div>
+</div>
+
+<script>
+    let balance = 0.00; 
+    document.getElementById('userBalance').innerText = balance.toFixed(2);
+
+    const activeCodes = {
+        "RLY-100-9F2B8D7A4E": 100, "RLY-100-3C8E1A9F6B": 100, "RLY-100-7D4A6B2C5E": 100, "RLY-100-1E9F3B8D6A": 100, "RLY-100-5A2C7E4B9F": 100,
+        "RLY-120-8B6C4E2F9A": 120, "RLY-120-2F9A7D5B3C": 120, "RLY-120-6E3B9F1A4D": 120, "RLY-120-4D1F6A8B2E": 120, "RLY-120-9C5E2B7F3A": 120,
+        "RLY-500-Z9X8W7V6U5": 500, "RLY-500-A1B2C3D4E5": 500, "RLY-500-F6G7H8I9J0": 500, "RLY-500-K1L2M3N4O5": 500, "RLY-500-P6Q7R8S9T0": 500,
+        "RLY-1500-👑-9A8B7C": 1500, "RLY-1500-👑-5D4E3F": 1500, "RLY-1500-👑-1A2B3C": 1500, "RLY-1500-👑-6X7Y8Z": 1500, "RLY-1500-👑-4M5N6P": 1500
+    };
+
+    function acceptTerms() {
+        if(!document.getElementById('agreeCheck').checked) {
+            alert('يجب عليك الموافقة على القوانين والخصوصية أولاً للدخول!');
+            return;
+        }
+        document.getElementById('termsModal').style.display = 'none';
+    }
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function showBankDetails(name, info) {
+        document.getElementById('depositDetails').style.display = 'block';
+        document.getElementById('depositAlertBox').style.display = 'none';
+        document.getElementById('targetBankTitle').innerText = `بوابة الدفع: ${name}`;
+        document.getElementById('targetBankInfo').innerHTML = info;
+    }
+
+    function submitDepositTicket() {
+        const amt = parseFloat(document.getElementById('depositAmount').value);
+        const file = document.getElementById('depositFile').files[0];
+        if (amt < 100 || !amt || !file) {
+            alert('الرجاء إدخال مبلغ الإيداع وإرفاق سكرين شوت إثبات الدفع أولاً!');
+            return;
+        }
+        document.getElementById('depositDetails').style.display = 'none';
+        document.getElementById('backFromDepositBtn').style.display = 'none';
+        document.getElementById('depositAlertBox').style.display = 'block';
+    }
+
+    function closeAlertAndReturn() {
+        document.getElementById('depositAmount').value = "";
+        document.getElementById('depositFile').value = "";
+        document.getElementById('depositAlertBox').style.display = 'none';
+        document.getElementById('backFromDepositBtn').style.display = 'block';
+        switchScreen('mainScreen');
+    }
+
+    function redeemCode() {
+        const inputCode = document.getElementById('activationCodeInput').value.trim().toUpperCase();
+        if (inputCode === "") { alert("الرجاء إدخال كود التفعيل!"); return; }
+
+        if (activeCodes.hasOwnProperty(inputCode)) {
+            const prizeAmount = activeCodes[inputCode];
+            balance += prizeAmount;
+            document.getElementById('userBalance').innerText = balance.toFixed(2);
+            alert(`🎉 نظام الحماية: تم التحقق بنجاح! تم شحن محفظتك بـ +${prizeAmount} DH.`);
+            document.getElementById('activationCodeInput').value = ""; 
+            delete activeCodes[inputCode];
+        } else {
+            alert("❌ خطأ حماية: الكود الملقم غير صالح، أو مستعمل مسبقاً!");
+        }
+    }
+
+    function processWithdrawal() {
+        const amt = parseFloat(document.getElementById('withdrawAmount').value);
+        const rib = document.getElementById('withdrawRib').value;
+        if (amt < 200 || !amt || !rib) { alert('خطأ: الحد الأدنى للسحب هو 200 درهم.'); return; }
+        if (amt > balance) { alert('خطأ: رصيدك الحالي غير كافٍ.'); return; }
+        balance -= amt;
+        document.getElementById('userBalance').innerText = balance.toFixed(2);
+        alert(`تم تسجيل طلب السحب بنجاح وتطبيق عمولة 5%. سيتم المراجعة والإرسال.`);
+        switchScreen('mainScreen');
+    }
+
+    function startMatching() {
+        const bet = 20; 
+        if (balance < bet) {
+            alert('رصيدك أقل من 20 DH (2$)، يرجى تفعيل كود رصيد لدخول جولة البارشيس.');
+            return;
+        }
+        
+        document.getElementById('backFromGameBtn').style.display = "none";
+        document.getElementById('findMatchBtn').innerText = "جاري الاتصال بالغرفة الفورية (1 VS 1)... 🔃";
+        document.getElementById('findMatchBtn').disabled = true;
+
+        setTimeout(() => {
+            const randomID = "ID_" + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('opponentName').innerText = randomID;
+            
+            document.getElementById('pTokens').innerText = "3";
+            document.getElementById('sTokens').innerText = "3";
+            document.getElementById('distanceInfo').innerText = "مرحلة فتح الممرات الأربعة";
+
+            document.getElementById('findMatchBtn').style.display = "none";
+            document.getElementById('gameArena').style.display = "block";
+            document.getElementById('gameStatus').innerText = `اتصال مستقر مع المنافس [${randomID}]. طاولتك جاهزة للرمي!`;
+            document.getElementById('rollBtn').style.display = "block";
+            
+            balance -= bet;
+            document.getElementById('userBalance').innerText = balance.toFixed(2);
+        }, 2000);
+    }
+
+    function executeTurn() {
+        document.getElementById('rollBtn').style.display = "none";
+        document.getElementById('gameStatus').innerText = "جاري محاكاة رمي أحجار النرد المزدوجة وحركات البارشي... 🎲";
+
+        setTimeout(() => {
+            // تحديث الخوارزمية الحازمة: اللاعب يربح بنسبة 25% فقط، ويخسر بنسبة 75% لصالح السيستم
+            const rng = Math.random() * 100;
+            let playerDiceResult, systemDiceResult;
+
+            if (rng <= 25) {
+                // حالة الفوز لللاعب (25/100 من الجولات)
+                playerDiceResult = Math.floor(Math.random() * 2) + 5; // 5 أو 6
+                systemDiceResult = Math.floor(Math.random() * 3) + 1; // من 1 إلى 3
+                
+                document.getElementById('playerDice').innerText = playerDiceResult;
+                document.getElementById('systemDice').innerText = systemDiceResult;
+                
+                document.getElementById('pTokens').innerText = "4";
+                document.getElementById('distanceInfo').innerText = "لقد قمت بإدخال القطعة الأخيرة لمركز الأمان المقفل 🏁";
+                
+                const winNet = 20 * 1.8; 
+                balance += winNet;
+                document.getElementById('gameStatus').innerText = `🎉 مبروك الفوز! حاصرت قطع الخصم وأغلقت اللوح. تمت إضافة +36.00 DH لصالح محفظتك.`;
+                document.getElementById('gameStatus').style.color = "var(--success)";
+            } else {
+                // حالة خسارة اللاعب المحققة (75/100 من الجولات)
+                playerDiceResult = Math.floor(Math.random() * 3) + 1; 
+                systemDiceResult = Math.floor(Math.random() * 2) + 5; 
+                
+                document.getElementById('playerDice').innerText = playerDiceResult;
+                document.getElementById('systemDice').innerText = systemDiceResult;
+                
+                document.getElementById('sTokens').innerText = "4";
+                document.getElementById('distanceInfo').innerText = "الخصم تجاوز قطعتك وحقق قفزة النرد المزدوج الكاملة";
+                
+                document.getElementById('gameStatus').innerText = `❌ خروج تكتيكي! تفوق المنافس المجهول في إيصال قطعه أولاً لخزانة الهدف.`;
+                document.getElementById('gameStatus').style.color = "var(--danger)";
+            }
+
+            document.getElementById('userBalance').innerText = balance.toFixed(2);
+
+            setTimeout(() => {
+                document.getElementById('gameArena').style.display = "none";
+                document.getElementById('findMatchBtn').style.display = "block";
+                document.getElementById('findMatchBtn').innerText = "⚔️ دخول جولة تحدي 1 ضد 1 جديدة";
+                document.getElementById('findMatchBtn').disabled = false;
+                document.getElementById('backFromGameBtn').style.display = "block";
+                document.getElementById('playerDice').innerText = "-";
+                document.getElementById('systemDice').innerText = "-";
+                document.getElementById('gameStatus').style.color = "var(--primary)";
+            }, 4500);
+
+        }, 1500);
+    }
+</script>
+</body>
+</html>
