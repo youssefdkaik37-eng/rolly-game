@@ -12,10 +12,14 @@
             --success: #22c55e;
             --danger: #ef4444;
             --text: #e2e8f0;
+            --ludo-green: #22c55e;
+            --ludo-red: #ef4444;
+            --ludo-yellow: #eab308;
+            --ludo-blue: #3b82f6;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: var(--text); margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        h1, h2, h3 { text-align: center; color: var(--primary); }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: var(--text); margin: 0; padding: 10px; }
+        .container { max-width: 600px; margin: auto; background: var(--card-bg); padding: 15px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        h1, h2, h3 { text-align: center; color: var(--primary); margin: 10px 0; }
         .screen { display: none; }
         .screen.active { display: block; }
         
@@ -24,24 +28,38 @@
         .btn-success { background: var(--success); color: #fff; }
         .btn-danger { background: var(--danger); color: #fff; }
         .bank-btn { position: relative; background: #334155; color: white; text-align: right; padding-right: 20px; }
-        .badge-soon { position: absolute; left: 15px; top: 15px; background: var(--danger); color: white; font-size: 12px; padding: 2px 8px; border-radius: 4px; }
         
-        /* تصميم لوح البارشيسي المحاكي للصورة المرفقة */
-        .game-box { background: #111827; padding: 20px; border-radius: 10px; border: 2px solid var(--primary); text-align: center; margin-top: 15px; }
-        .vs-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        /* محاكاة اللوح الكلاسيكي 100% المقتبس من صورة 416e2a91b431a8a915f3c7eaa754619a_2.jpg */
+        .game-box { background: #111827; padding: 15px; border-radius: 10px; border: 2px solid var(--primary); text-align: center; margin-top: 10px; }
+        .vs-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #1f2937; padding: 10px; border-radius: 8px; }
         .player-profile { text-align: center; width: 45%; }
-        .player-avatar { width: 60px; height: 60px; background: #475569; border-radius: 50%; margin: auto; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid var(--primary); color: white; }
+        .player-avatar { width: 50px; height: 50px; background: #475569; border-radius: 50%; margin: auto; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 2px solid var(--primary); color: white; }
         
-        /* مسار التقدم الحي للقطع داخل اللعبة */
-        .ludo-board-track { background: #1f2937; border: 2px solid #374151; padding: 15px; border-radius: 8px; margin: 15px 0; }
-        .track-bar { background: #111827; height: 20px; border-radius: 10px; margin: 10px 0; position: relative; overflow: hidden; border: 1px solid #4b5563; }
-        .progress-fill { height: 100%; width: 0%; transition: width 0.8s ease-in-out; }
-        .p-fill { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-        .s-fill { background: linear-gradient(90deg, #ef4444, #f87171); }
+        /* هيكلة اللوح الكلاسيكي الملون */
+        .ludo-board-classic { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 5px; width: 280px; height: 280px; margin: 15px auto; background: #fff; padding: 5px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .ludo-zone { border-radius: 4px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; font-size: 10px; font-weight: bold; color: #fff; position: relative; }
+        .zone-green { background-color: var(--ludo-green); }
+        .zone-red { background-color: var(--ludo-red); }
+        .zone-yellow { background-color: var(--ludo-yellow); }
+        .zone-blue { background-color: var(--ludo-blue); }
+        .zone-center { background: linear-gradient(135deg, var(--ludo-green) 50%, var(--ludo-red) 50%); position: relative; }
+        .zone-center::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, var(--ludo-yellow) 50%, transparent 50%); z-index: 1; }
+        
+        /* ممرات التقدم والمربعات */
+        .ludo-path { background: #e5e7eb; color: #000; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+        .path-cell { background: #fff; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 9px; min-height: 20px; font-weight: bold; position: relative; }
+        
+        /* القطع الكلاسيكية المستديرة */
+        .p-token { width: 16px; height: 16px; border-radius: 50%; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.4); border: 2px solid #fff; position: absolute; z-index: 10; transition: all 0.4s ease; }
+        .token-player { background-color: #00ffff; animation: pulse 1s infinite alternate; }
+        .token-system { background-color: #ff0055; }
+        
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.15); } }
+        .dice-container { display: flex; justify-content: center; gap: 10px; margin: 10px 0; }
+        .dice-face { width: 40px; height: 40px; background: #fff; color: #000; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 2px solid #cbd5e1; }
         
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: var(--card-bg); padding: 25px; border-radius: 12px; max-width: 450px; width: 90%; text-align: right; }
-        
         input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; box-sizing: border-box; }
         .wallet-info { background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 18px; border-left: 5px solid var(--success); display: flex; justify-content: space-between; align-items: center; }
         .code-section { background: #0f172a; padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px dashed var(--primary); }
@@ -51,21 +69,18 @@
 </head>
 <body>
 
-<!-- نافذة التسجيل الإلزامية والموافقة على الشروط والموقع المطور -->
+<!-- نافذة التسجيل والموافقة -->
 <div id="registerModal" class="modal" style="display: flex;">
     <div class="modal-content">
         <h2>📝 تسجيل حساب جديد ودخول</h2>
         <label>اسم المستخدم للظهور:</label>
         <input type="text" id="regUsername" placeholder="مثال: يوسف_مغربي">
-        
         <label>البريد الإلكتروني (Gmail):</label>
         <input type="email" id="regEmail" placeholder="example@gmail.com">
-        
         <div style="background: #0f172a; padding: 12px; border-radius: 6px; font-size: 13px; max-height: 120px; overflow-y: auto; margin-bottom: 10px;">
             <b>📜 اتفاقية خصوصية اللاعبين:</b><br>
-            1. المنصة توفر بيئة تفاعلية وجولات تحديات ثنائية 1v1 للبارشيسي.<br>
-            2. تقتطع المنصة عمولات إدارية عند العمليات (إيداع 5%، لعب 10%، سحب 5%).<br>
-            3. يلتزم اللاعب بتقديم سكرين شوت دفع حقيقي للإدارة للتحقق من الرصيد.
+            1. المنصة توفر بيئة تفاعلية وجولات تحديات ثنائية 1v1 للبارشيسي الكلاسيكي.<br>
+            2. تقتطع المنصة عمولات إدارية عند العمليات (إيداع 5%، لعب 10%، سحب 5%).
         </div>
         <label style="display: block; margin-bottom: 15px;">
             <input type="checkbox" id="regAgree" style="width: auto; margin-left: 10px;"> وافقت على كامل الشروط والقوانين والخصوصية
@@ -75,7 +90,6 @@
 </div>
 
 <div class="container">
-    <!-- لوحة المحفظة الذكية تظهر اسم المستخدم المستعار الفوق -->
     <div class="wallet-info">
         <div>👤 لاعب: <span id="displayTopName" style="color: var(--primary); font-weight: bold;">-</span></div>
         <div>💰 الرصيد: <span id="userBalance" style="color: var(--success); font-weight: bold;">0.00</span> DH</div>
@@ -96,44 +110,73 @@
         </div>
     </div>
 
-    <!-- شاشة اللعب المطور (بارشيس حقيقي 100/100 - رمي نرد متتابع لخط النهاية - خصم مجهول بالهوية والـ ID) -->
+    <!-- شاشة اللعب بنظام كلاسيكي كامل محاكي للصورة 100% -->
     <div id="gameScreen" class="screen">
-        <h2>⚔️ تحدي البارشيسي التفاعلي الحقيقي (1 VS 1)</h2>
+        <h2>⚔️ لوحة البارشيسي الكلاسيكية (1 VS 1)</h2>
         
         <div id="setupMatchArea">
-            <label>حدد مبلغ الرهان الذي تريد الدخول به في هذه الجولة (DH):</label>
+            <label>حدد مبلغ الرهان الذي تريد الدخول به (DH):</label>
             <p style="color: var(--danger); font-size: 13px; margin: 0 0 10px 0;">⚠️ الحد الأدنى لدخول الرهان هو 20 درهم مغربي (~2 دولار)</p>
-            <input type="number" id="customBetInput" min="20" value="20" placeholder="أدخل مبلغ الرهان مثلاً: 50">
-            <button class="btn btn-primary" id="findMatchBtn" onclick="startMatching()">البحث عن طاولة لودو متصلة... 🔍</button>
+            <input type="number" id="customBetInput" min="20" value="20">
+            <button class="btn btn-primary" id="findMatchBtn" onclick="startMatching()">البحث عن طاولة كلاسيكية... 🔍</button>
         </div>
 
         <div id="gameArena" class="game-box" style="display: none;">
             <div class="vs-container">
                 <div class="player-profile">
                     <div class="player-avatar">👤</div>
-                    <p style="font-weight: bold; margin: 5px 0; font-size: 13px;" id="arenaPlayerId"></p>
-                    <div style="font-size: 22px; font-weight: bold; color: var(--primary);">🎲 <span id="playerDice">-</span></div>
+                    <p style="font-weight: bold; margin: 5px 0; font-size: 12px;" id="arenaPlayerId"></p>
                 </div>
-                <div style="font-size: 20px; font-weight: bold; color: var(--danger);">VS</div>
+                <div style="font-size: 16px; font-weight: bold; color: var(--primary);" id="gameRoundStatus">دورك للرمي</div>
                 <div class="player-profile">
-                    <!-- أيقونة مستخدم مجهول فقط بدون أي صور آليين أو بوتات تعبيراً عن الواقعية -->
                     <div class="player-avatar" style="border-color: var(--danger); background: #374151;">👤</div>
-                    <p id="opponentName" style="font-weight: bold; margin: 5px 0; color: var(--danger); font-size: 13px;"></p>
-                    <div style="font-size: 22px; font-weight: bold; color: var(--danger);">🎲 <span id="systemDice">-</span></div>
+                    <p id="opponentName" style="font-weight: bold; margin: 5px 0; color: var(--danger); font-size: 12px;"></p>
                 </div>
             </div>
 
-            <!-- لوح البارشي ومسارات تقدم القطع حتى الفائز الأول للوصول للداخل -->
-            <div class="ludo-board-track">
-                <div style="text-align: right; font-size: 13px; color: #60a5fa; font-weight: bold;">🔵 مسار تقدم قطعك نحو الهدف الداخلي: <span id="pScoreText">0</span> / 100</div>
-                <div class="track-bar"><div id="pProgress" class="progress-fill p-fill"></div></div>
-                
-                <div style="text-align: right; font-size: 13px; color: #f87171; font-weight: bold; margin-top: 15px;">🔴 مسار تقدم قطع المنافس المجهول: <span id="sScoreText">0</span> / 100</div>
-                <div class="track-bar"><div id="sProgress" class="progress-fill s-fill"></div></div>
+            <!-- النرد المزدوج الكلاسيكي المحاكي لأعلى الصورة -->
+            <div class="dice-container">
+                <div class="dice-face" id="dice1">🎲</div>
+                <div class="dice-face" id="dice2">🎲</div>
             </div>
 
-            <p id="gameStatus" style="font-size: 15px; font-weight: bold; color: var(--primary); min-height: 24px;"></p>
-            <button class="btn btn-success" id="rollBtn" onclick="executeTurn()">ارمي النرد الآن للتقدم خطوة 🎲</button>
+            <!-- مجسم اللوح الكلاسيكي المقسم لأربعة مناطق ملونة -->
+            <div class="ludo-board-classic">
+                <div class="ludo-zone zone-green">🟢 القاعدة<div id="greenBaseZone"></div></div>
+                <div class="ludo-path">
+                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-red)"></div><div class="path-cell"></div>
+                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-red)"></div><div class="path-cell"></div>
+                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-red)"></div><div class="path-cell"></div>
+                </div>
+                <div class="ludo-zone zone-red">🔴 القاعدة<div id="redBaseZone"></div></div>
+                
+                <div class="ludo-path" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="path-cell"></div><div class="path-cell"></div><div class="path-cell"></div>
+                    <div class="path-cell" style="background:var(--ludo-green)"></div><div class="path-cell" style="background:var(--ludo-green)"></div><div class="path-cell"></div>
+                    <div class="path-cell"></div><div class="path-cell"></div><div class="path-cell"></div>
+                </div>
+                <div class="ludo-zone zone-center">
+                    <!-- موقع القطع المتحركة داخل مسار اللوح -->
+                    <div id="playerTokenObj" class="p-token token-player" style="top:40%; left:20%;"></div>
+                    <div id="systemTokenObj" class="p-token token-system" style="top:40%; left:60%;"></div>
+                </div>
+                <div class="ludo-path">
+                    <div class="path-cell"></div><div class="path-cell"></div><div class="path-cell"></div>
+                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-blue)"></div><div class="path-cell"></div>
+                    <div class="path-cell"></div><div class="path-cell"></div><div class="path-cell"></div>
+                </div>
+
+                <div class="ludo-zone zone-yellow">🟡 القاعدة<div id="yellowBaseZone"></div></div>
+                <div class="ludo-path">
+                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-yellow)"></div><div class="path-cell"></div>
+                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-yellow)"></div><div class="path-cell"></div>
+                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-yellow)"></div><div class="path-cell"></div>
+                </div>
+                <div class="ludo-zone zone-blue">🔵 القاعدة<div id="blueBaseZone"></div></div>
+            </div>
+
+            <p id="gameStatus" style="font-size: 14px; font-weight: bold; color: var(--primary); min-height: 20px;"></p>
+            <button class="btn btn-success" id="rollBtn" onclick="executeTurn()">ارمي النرد المزدوج 🎲</button>
         </div>
         <button class="btn btn-danger" id="backFromGameBtn" onclick="switchScreen('mainScreen')">رجوع</button>
     </div>
@@ -142,28 +185,22 @@
     <div id="depositScreen" class="screen">
         <h2>📥 شحن رصيد الحساب</h2>
         <p style="color: var(--danger); font-size: 14px; text-align: center;">⚠️ أقل مبلغ للإيداع هو 100 درهم (تقتطع المنصة 5% عمولة معالجة)</p>
-        
         <button class="btn bank-btn" style="background: #f60;" onclick="showBankDetails('CIH', 'RIB: 6445033211021600')">CIH Bank</button>
         <button class="btn bank-btn" style="background: #0056b3;" onclick="showBankDetails('Cash Plus', 'رقم الهاتف: 0782521290')">كاش بليس</button>
-        
-        <button class="btn bank-btn" style="background: #eed100; color: #333;" disabled>البريد بنك <span class="badge-soon">قريباً...</span></button>
-        <button class="btn bank-btn" style="background: #f3ba2f; color: #000;" disabled>Binance Pay <span class="badge-soon">قريباً...</span></button>
 
         <div id="depositDetails" style="display: none; background: #0f172a; padding: 15px; border-radius: 8px; margin-top: 15px;">
             <h3 id="targetBankTitle"></h3>
-            <p id="targetBankInfo" style="background: #1e293b; padding: 10px; border-radius: 5px; word-break: break-all; text-align: center; font-size: 18px; color: var(--primary); font-weight: bold;"></p>
-            <p style="color: #00ffcc; font-size: 14px;">💡 أرسل المبلغ للحساب أعلاه أولاً، ثم ارفع الإثبات واضغط على تأكيد لطلب كود تفعيل الرصيد:</p>
-            <input type="number" id="depositAmount" min="100" placeholder="المبلغ الذي أرسلته بالدرهم">
+            <p id="targetBankInfo" style="background: #1e293b; padding: 10px; border-radius: 5px; text-align: center; font-size: 18px; color: var(--primary); font-weight: bold;"></p>
+            <input type="number" id="depositAmount" min="100" placeholder="المبلغ بالدرهم">
             <input type="file" id="depositFile" accept="image/*">
-            <button class="btn btn-success" onclick="submitDepositTicket()">تأكيد وإرسال الإثبات ل مراجعة الإدارة ✅</button>
+            <button class="btn btn-success" onclick="submitDepositTicket()">تأكيد وإرسال الإثبات للإدارة ✅</button>
         </div>
 
         <div id="depositAlertBox" class="alert-box">
-            <h3 style="color: var(--success); margin-top: 0;">✅ تم تسجيل طلب الشحن الأولي برقم تذكرة معلق</h3>
-            <p style="font-size: 15px; line-height: 1.6;">المرجو الآن نسخ وإرسال سكرين شوت (إثبات الدفع) مرة أخرى يدوياً إلى الجيمايل التالي لضمان التحقق الفوري:</p>
+            <h3 style="color: var(--success); margin-top: 0;">✅ تم تسجيل الطلب</h3>
             <div class="email-display">mohalonadiko@gmail.com</div>
-            <p style="color: var(--primary); font-weight: bold; font-size: 15px;">⏳ انتظر من ساعة (1) إلى 4 ساعات كحد أقصى ليقوم السستم بتدقيق حساب البنك وإرسال كود التفعيل الخاص بك.</p>
-            <button class="btn btn-primary" onclick="closeAlertAndReturn()" style="margin-top: 10px; padding: 10px;">فهمت، العودة للرئيسية</button>
+            <p style="color: var(--primary); font-weight: bold; font-size: 14px;">⏳ انتظر من ساعة إلى 4 ساعات كحد أقصى ليقوم السستم بإرسال كود التفعيل.</p>
+            <button class="btn btn-primary" onclick="closeAlertAndReturn()">العودة للرئيسية</button>
         </div>
         <button class="btn btn-danger" id="backFromDepositBtn" onclick="switchScreen('mainScreen')" style="margin-top: 15px;">رجوع</button>
     </div>
@@ -171,21 +208,20 @@
     <!-- شاشة السحب -->
     <div id="withdrawScreen" class="screen">
         <h2>📤 طلب سحب الأرباح</h2>
-        <p style="color: var(--danger); font-size: 14px; text-align: center;">⚠️ الحد الأدنى للسحب هو 200 درهم (تطبق عمولة سحب 5%)</p>
-        <input type="text" id="withdrawRib" placeholder="ضع رقم حسابك RIB أو رقم الهاتف">
-        <input type="number" id="withdrawAmount" min="200" placeholder="المبلغ المراد سحبه بالدرهم">
-        <button class="btn btn-danger" onclick="processWithdrawal()">تأكيد وإرسال طلب السحب</button>
+        <p style="color: var(--danger); font-size: 14px; text-align: center;">⚠️ الحد الأدنى للسحب هو 200 درهم</p>
+        <input type="text" id="withdrawRib" placeholder="ضع رقم حسابك RIB">
+        <input type="number" id="withdrawAmount" min="200" placeholder="المبلغ بالدرهم">
+        <button class="btn btn-danger" onclick="processWithdrawal()">تأكيد طلب السحب</button>
         <button class="btn btn-primary" onclick="switchScreen('mainScreen')">رجوع</button>
     </div>
 
     <!-- شاشة نظام الإحالة -->
     <div id="referralScreen" class="screen">
-        <h2>🔗 نظام ربح الإحالات (برنامج الشركاء)</h2>
-        <p>انشر رابطك الخاص واربح عمولة 2% من كل شحنة يقوم بها أي شخص يسجل من خلالك!</p>
+        <h2>🔗 نظام ربح الإحالات</h2>
         <div style="background: #0f172a; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0;">
             <code style="color: var(--primary); font-size: 16px;">https://playrolly.com/register?ref=user8614</code>
         </div>
-        <button class="btn btn-primary" onclick="alert('تم نسخ رابط الإحالة الخاص بك بنجاح!')">نسخ الرابط ونشره في واتساب / فيسبوك</button>
+        <button class="btn btn-primary" onclick="alert('تم نسخ رابط الإحالة!')">نسخ الرابط</button>
         <button class="btn btn-danger" onclick="switchScreen('mainScreen')">رجوع</button>
     </div>
 </div>
@@ -193,8 +229,8 @@
 <script>
     let balance = 0.00; 
     let playerAccountID = "ID_" + Math.floor(100000 + Math.random() * 900000);
-    let playerCurrentProgress = 0;
-    let systemCurrentProgress = 0;
+    let playerStep = 0;
+    let systemStep = 0;
     let activeMatchBet = 0;
 
     const activeCodes = {
@@ -207,13 +243,10 @@
     function handleRegistration() {
         const username = document.getElementById('regUsername').value.trim();
         const email = document.getElementById('regEmail').value.trim();
-        const checked = document.getElementById('regAgree').checked;
-
-        if (username === "" || email === "" || !checked) {
-            alert("الرجاء ملء اسم المستخدم والجيمايل مع تحديد الموافقة على شروط الاستخدام!");
+        if (username === "" || email === "" || !document.getElementById('regAgree').checked) {
+            alert("الرجاء ملء البيانات والموافقة على الشروط!");
             return;
         }
-
         document.getElementById('displayTopName').innerText = username;
         document.getElementById('arenaPlayerId').innerText = playerAccountID;
         document.getElementById('registerModal').style.display = 'none';
@@ -233,8 +266,7 @@
 
     function submitDepositTicket() {
         const amt = parseFloat(document.getElementById('depositAmount').value);
-        const file = document.getElementById('depositFile').files[0];
-        if (amt < 100 || !amt || !file) {
+        if (amt < 100 || !amt || !document.getElementById('depositFile').files[0]) {
             alert('الرجاء إدخال مبلغ الإيداع وإرفاق سكرين شوت إثبات الدفع أولاً!');
             return;
         }
@@ -253,138 +285,129 @@
 
     function redeemCode() {
         const inputCode = document.getElementById('activationCodeInput').value.trim().toUpperCase();
-        if (inputCode === "") { alert("الرجاء إدخال كود التفعيل!"); return; }
-
         if (activeCodes.hasOwnProperty(inputCode)) {
             const prizeAmount = activeCodes[inputCode];
             balance += prizeAmount;
             document.getElementById('userBalance').innerText = balance.toFixed(2);
-            alert(`🎉 نظام الحماية: تم التحقق بنجاح! تم شحن محفظتك بـ +${prizeAmount} DH.`);
+            alert(`🎉 تم شحن محفظتك بـ +${prizeAmount} DH.`);
             document.getElementById('activationCodeInput').value = ""; 
             delete activeCodes[inputCode];
         } else {
-            alert("❌ خطأ حماية: الكود الملقم غير صالح، أو مستعمل مسبقاً!");
+            alert("❌ الكود غير صالح أو مستعمل مسبقاً!");
         }
     }
 
     function processWithdrawal() {
         const amt = parseFloat(document.getElementById('withdrawAmount').value);
-        const rib = document.getElementById('withdrawRib').value;
-        if (amt < 200 || !amt || !rib) { alert('خطأ: الحد الأدنى للسحب هو 200 درهم.'); return; }
-        if (amt > balance) { alert('خطأ: رصيدك الحالي غير كافٍ.'); return; }
+        if (amt < 200 || amt > balance) { alert('خطأ في الرصيد أو الحد الأدنى!'); return; }
         balance -= amt;
         document.getElementById('userBalance').innerText = balance.toFixed(2);
-        alert(`تم تسجيل طلب السحب بنجاح وتطبيق عمولة 5%. سيتم المراجعة والإرسال.`);
+        alert(`تم تسجيل طلب السحب بنجاح وعمولتك محفوظة.`);
         switchScreen('mainScreen');
     }
 
-    // بدء الاتصال بمباراة مخصصة الرهان (الحد الأدنى 2 دولار / 20 درهم)
     function startMatching() {
         activeMatchBet = parseFloat(document.getElementById('customBetInput').value);
-        
-        if (isNaN(activeMatchBet) || activeMatchBet < 20) {
-            alert("خطأ حماية: الحد الأدنى للدخول في الجولة هو 20 DH (~2$)!");
-            return;
-        }
-
-        if (balance < activeMatchBet) {
-            alert(`رصيدك المالي الحالي أقل من قيمة الرهان المحددة (${activeMatchBet} DH)، يرجى شحن الحساب.`);
-            return;
-        }
+        if (isNaN(activeMatchBet) || activeMatchBet < 20) { alert("الحد الأدنى للرهان هو 20 DH!"); return; }
+        if (balance < activeMatchBet) { alert("رصيدك المالي غير كافٍ!"); return; }
 
         document.getElementById('backFromGameBtn').style.display = "none";
-        document.getElementById('findMatchBtn').innerText = "جاري البحث عن طاولة لودو ثنائية حية... 🔃";
+        document.getElementById('findMatchBtn').innerText = "جاري البحث عن طاولة لودو كلاسيكية... 🔃";
         document.getElementById('findMatchBtn').disabled = true;
 
         setTimeout(() => {
             const randomID = "ID_" + Math.floor(100000 + Math.random() * 900000);
             document.getElementById('opponentName').innerText = randomID;
             
-            // تهيئة لوحة التقدم للبارشيسي الصفرية
-            playerCurrentProgress = 0;
-            systemCurrentProgress = 0;
-            updateVisualTracks();
+            playerStep = 0;
+            systemStep = 0;
+            animateTokens();
 
             document.getElementById('setupMatchArea').style.display = "none";
             document.getElementById('gameArena').style.display = "block";
-            document.getElementById('gameStatus').innerText = `تم ربط الطاولة مع المنافس المجهول [${randomID}]. ارمي النرد الأول!`;
+            document.getElementById('gameRoundStatus').innerText = "دورك للرمي";
             document.getElementById('rollBtn').style.display = "block";
             
             balance -= activeMatchBet;
             document.getElementById('userBalance').innerText = balance.toFixed(2);
-        }, 2000);
+        }, 1500);
     }
 
-    function updateVisualTracks() {
-        document.getElementById('pScoreText').innerText = playerCurrentProgress;
-        document.getElementById('sScoreText').innerText = systemCurrentProgress;
-        document.getElementById('pProgress').style.width = playerCurrentProgress + "%";
-        document.getElementById('sProgress').style.width = systemCurrentProgress + "%";
+    // حركة بصرية دقيقة للقطع الدائرية الكلاسيكية داخل اللوح
+    function animateTokens() {
+        const pToken = document.getElementById('playerTokenObj');
+        const sToken = document.getElementById('systemTokenObj');
+        
+        // محاكاة تحرك القطع في المربعات حسب الخطوات الحالية بشكل دائري كلاسيكي
+        pToken.style.left = (20 + (playerStep * 0.45)) + "%";
+        pToken.style.top = (40 - (playerStep * 0.2)) + "%";
+        
+        sToken.style.left = (60 - (systemStep * 0.45)) + "%";
+        sToken.style.top = (40 + (systemStep * 0.2)) + "%";
     }
 
-    // جولة لعب تفاعلية تعتمد على رمي النرد المزدوج المتكرر حتى الوصول لـ 100 نقطة (الداخل)
     function executeTurn() {
         document.getElementById('rollBtn').disabled = true;
         
-        // خوارزمية ذكية تجعل اللاعب يربح بنسبة 25/100 إجمالياً عند خط النهاية
+        // خوارزمية ذكية تضمن فوز اللاعب بنسبة 25% فقط وخسارته بنسبة 75% عند الوصول لخط النهاية
         const runChance = Math.random() * 100;
-        let pDice, sDice;
+        let d1, d2, totalSteps;
 
         if (runChance <= 25) {
-            // خطوات سريعة للاعب
-            pDice = Math.floor(Math.random() * 4) + 9; // رمية نرد مزدوجة قوية للاعب من 9 إلى 12
-            sDice = Math.floor(Math.random() * 5) + 2; 
+            d1 = Math.floor(Math.random() * 3) + 4; // من 4 إلى 6 لللاعب
+            d2 = Math.floor(Math.random() * 3) + 4;
+            totalSteps = d1 + d2;
+            playerStep += totalSteps;
+            systemStep += Math.floor(Math.random() * 5) + 2;
         } else {
-            // خطوات أسرع للسيستم لتأمين الخسارة المدروسة
-            pDice = Math.floor(Math.random() * 5) + 2; 
-            sDice = Math.floor(Math.random() * 4) + 9; 
+            d1 = Math.floor(Math.random() * 3) + 1; // من 1 إلى 3 لللاعب (ضعيف)
+            d2 = Math.floor(Math.random() * 3) + 1;
+            totalSteps = d1 + d2;
+            playerStep += totalSteps;
+            systemStep += Math.floor(Math.random() * 5) + 7; // السيستم يتقدم بقوة
         }
 
-        document.getElementById('playerDice').innerText = pDice;
-        document.getElementById('systemDice').innerText = sDice;
+        // عرض النرد المزدوج بصرياً في الأعلى
+        document.getElementById('dice1').innerText = d1;
+        document.getElementById('dice2').innerText = d2;
 
-        playerCurrentProgress += pDice;
-        systemCurrentProgress += sDice;
+        if (playerStep >= 100) playerStep = 100;
+        if (systemStep >= 100) systemStep = 100;
 
-        // قفل الحدود عند 100 خطوة كحد أقصى للداخل
-        if (playerCurrentProgress >= 100) playerCurrentProgress = 100;
-        if (systemCurrentProgress >= 100) systemCurrentProgress = 100;
+        animateTokens();
 
-        updateVisualTracks();
-
-        // مراجعة شروط الفائز الأول للوصول للداخل
-        if (playerCurrentProgress >= 100) {
-            const finalWinNet = activeMatchBet * 1.8; // خصم 10% عمولة اللعب للموقع
+        if (playerStep >= 100) {
+            const finalWinNet = activeMatchBet * 1.8;
             balance += finalWinNet;
             document.getElementById('userBalance').innerText = balance.toFixed(2);
-            document.getElementById('gameStatus').innerText = `🏁 🎉 مبروك الفوز! قطعتك وصلت إلى المربع الداخلي أولاً. ربحت الصافي: ${finalWinNet} DH!`;
-            document.getElementById('gameStatus').style.color = "var(--success)";
+            document.getElementById('gameRoundStatus').innerText = "🏁 فوز!";
+            document.getElementById('gameStatus').innerText = `🎉 مبروك! وصلت قطعتك للداخل أولاً وربحت ${finalWinNet} DH!`;
             endCurrentMatch();
-        } else if (systemCurrentProgress >= 100) {
-            document.getElementById('gameStatus').innerText = `🏁 ❌ خروج تكتيكي! الخصم المجهول أوصل قطع البارشيسي إلى المربع النهائي الداخلي أولاً.`;
-            document.getElementById('gameStatus').style.color = "var(--danger)";
+        } else if (systemStep >= 100) {
+            document.getElementById('gameRoundStatus').innerText = "🏁 خسارة";
+            document.getElementById('gameStatus').innerText = `❌ خسرت الجولة! الخصم المجهول أوصل قطعه الكلاسيكية للداخل أولاً.`;
             endCurrentMatch();
         } else {
-            document.getElementById('gameStatus').innerText = `تقدمت بـ +${pDice} خطوات، وتقدم المنافس بـ +${sDice} خطوات. ارمي النرد مجدداً!`;
-            document.getElementById('rollBtn').disabled = false;
+            document.getElementById('gameStatus').innerText = `رميت النرد المزدوج ومجموع خطواتك +${totalSteps}. الخصم يتحرك...`;
+            setTimeout(() => {
+                document.getElementById('rollBtn').disabled = false;
+            }, 800);
         }
     }
 
     function endCurrentMatch() {
         document.getElementById('rollBtn').style.display = "none";
         document.getElementById('rollBtn').disabled = false;
-        
         setTimeout(() => {
             document.getElementById('gameArena').style.display = "none";
             document.getElementById('setupMatchArea').style.display = "block";
-            document.getElementById('findMatchBtn').innerText = "البحث عن طاولة لودو متصلة... 🔍";
+            document.getElementById('findMatchBtn').innerText = "البحث عن طاولة كلاسيكية... 🔍";
             document.getElementById('findMatchBtn').disabled = false;
             document.getElementById('backFromGameBtn').style.display = "block";
-            document.getElementById('playerDice').innerText = "-";
-            document.getElementById('systemDice').innerText = "-";
-            document.getElementById('gameStatus').style.color = "var(--primary)";
+            document.getElementById('dice1').innerText = "🎲";
+            document.getElementById('dice2').innerText = "🎲";
             document.getElementById('gameStatus').innerText = "";
-        }, 5000);
+        }, 4000);
     }
 </script>
 </body>
