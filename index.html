@@ -3,420 +3,402 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة ROLLY الملوكية والألعاب</title>
+    <title>منصة ROLLY الملوكية الاحترافية - Parchís Engine</title>
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
-            --primary: #f3ba2f;
-            --success: #22c55e;
+            --bg-dark: #070b12;
+            --card-bg: #0f172a;
+            --card-sub: #1e293b;
+            --primary: #fbbf24;
+            --primary-hover: #f59e0b;
+            --success: #10b981;
             --danger: #ef4444;
-            --text: #e2e8f0;
-            --ludo-green: #22c55e;
-            --ludo-red: #ef4444;
-            --ludo-yellow: #eab308;
-            --ludo-blue: #3b82f6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            /* ألوان البارشيسي الرسمية المعتمدة */
+            --ludo-green: #15803d;
+            --ludo-red: #b91c1c;
+            --ludo-yellow: #a16207;
+            --ludo-blue: #1d4ed8;
+            --safe-cell: #475569;
         }
-        *, *::before, *::after { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: var(--text); margin: 0; padding: 10px; }
-        .container { max-width: 600px; margin: auto; background: var(--card-bg); padding: 15px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        h1, h2, h3 { text-align: center; color: var(--primary); margin: 10px 0; }
-        .screen { display: none; }
-        .screen.active { display: block; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at top, #1e1b4b 0%, #070b12 100%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 20px;
+            box-sizing: border-box;
+            border-left: 1px solid #334155;
+            border-right: 1px solid #334155;
+            box-shadow: 0 0 60px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 800;
+            margin: 10px 0;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.6);
+        }
+
+        .screen {
+            display: none;
+            animation: cubic-bezier(0.4, 0, 0.2, 1) fadeIn 0.4s forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* الهوية المالية والمحفظة */
+        .wallet-info {
+            background: linear-gradient(135deg, var(--card-sub) 0%, #0f172a 100%);
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-tag {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.12);
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* نظام الأزرار */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            margin: 12px 0;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, #d97706 100%); color: #000; }
+        .btn-success { background: linear-gradient(135deg, var(--success) 0%, #059669 100%); color: #fff; }
+        .btn-danger { background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%); color: #fff; }
+        .btn-secondary { background: #334155; color: #fff; border: 1px solid #475569; }
+
+        /* نافذة التسجيل */
+        .modal {
+            display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 7, 18, 0.98); justify-content: center; align-items: center; z-index: 9999;
+        }
+
+        .modal-content {
+            background: var(--card-bg); padding: 30px; border-radius: 20px; max-width: 450px; width: 90%;
+            border: 1px solid #334155; box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+        }
+
+        input {
+            width: 100%; padding: 14px; margin: 10px 0 20px 0; border-radius: 10px;
+            border: 1px solid #334155; background: #070b12; color: #fff; box-sizing: border-box;
+        }
+
+        /* بناء لوحة البارشيسي الحقيقية المتكاملة */
+        .parchisi-board {
+            width: 340px;
+            height: 340px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 140px 60px 140px;
+            grid-template-rows: 140px 60px 140px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            border: 4px solid #334155;
+        }
+
+        .nest { display: flex; justify-content: center; align-items: center; box-sizing: border-box; }
+        .nest-g { background: var(--ludo-green); }
+        .nest-r { background: var(--ludo-red); }
+        .nest-y { background: var(--ludo-yellow); }
+        .nest-b { background: var(--ludo-blue); }
+        .nest-inner { width: 80px; height: 80px; background: #fff; border-radius: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; box-sizing: border-box; }
+        .base-slot { background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+
+        /* ممرات الخلايا الدقيقة */
+        .track-v { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(7, 1fr); background: #f1f5f9; }
+        .track-h { display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(3, 1fr); background: #f1f5f9; }
         
-        .btn { width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-primary { background: var(--primary); color: #000; }
-        .btn-success { background: var(--success); color: #fff; }
-        .btn-danger { background: var(--danger); color: #fff; }
-        .bank-btn { position: relative; background: #334155; color: white; text-align: right; padding-right: 20px; }
-        
-        .game-box { background: #111827; padding: 15px; border-radius: 10px; border: 2px solid var(--primary); text-align: center; margin-top: 10px; }
-        .vs-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #1f2937; padding: 10px; border-radius: 8px; }
-        .player-profile { text-align: center; width: 45%; }
-        .player-avatar { width: 45px; height: 45px; background: #475569; border-radius: 50%; margin: auto; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 2px solid var(--primary); color: white; }
-        
-        /* لوحة البارشيسي الحتمية الدائرية المصممة لتتوافق مع الـ Engine */
-        .ludo-grid-board { display: grid; grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); gap: 2px; width: 340px; height: 340px; margin: 15px auto; background: #334155; padding: 5px; border-radius: 8px; position: relative; }
-        .grid-cell { background: #fff; border-radius: 2px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; font-size: 8px; font-weight: bold; color: #000; position: relative; overflow: hidden; }
-        
-        .c-safe { background-color: #cbd5e1 !important; border: 1px dashed #000; }
-        .c-p0-start { background-color: #3b82f6 !important; color: white; }
-        .c-p1-start { background-color: #ef4444 !important; color: white; }
-        .c-home { background: linear-gradient(45deg, #f3ba2f, #e2e8f0) !important; color: #000; font-size: 10px; font-weight: bold; }
-        .c-path { background-color: #f8fafc; }
-        
-        /* القطع الدائرية الأربعة لكل لاعب */
-        .token { width: 12px; height: 12px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.6); display: inline-block; margin: 1px; transition: transform 0.2s; }
-        .token-p0 { background-color: #00ffff; }
-        .token-p1 { background-color: #ff0055; }
-        .token.selectable { transform: scale(1.4); border-color: #fff; box-shadow: 0 0 8px #00ffff; cursor: pointer; animation: pulseToken 0.5s infinite alternate; }
-        
-        @keyframes pulseToken { from { transform: scale(1.1); } to { transform: scale(1.4); } }
-        
-        .dice-container { display: flex; justify-content: center; margin: 10px 0; }
-        .dice-face { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.4); border: 3px solid var(--primary); }
-        
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--card-bg); padding: 25px; border-radius: 12px; max-width: 450px; width: 90%; text-align: right; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; }
-        .wallet-info { background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 18px; border-left: 5px solid var(--success); display: flex; justify-content: space-between; align-items: center; }
-        .code-section { background: #0f172a; padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px dashed var(--primary); }
-        .alert-box { display: none; background: #1e293b; border: 2px solid var(--success); padding: 20px; border-radius: 10px; margin-top: 15px; text-align: center; }
-        .email-display { background: #0f172a; padding: 10px; border-radius: 6px; font-weight: bold; color: var(--primary); font-size: 18px; margin: 10px 0; display: inline-block; border: 1px solid #334155; }
+        .p-cell { border: 0.5px solid #cbd5e1; position: relative; display: flex; align-items: center; justify-content: center; }
+        .safe { background-color: var(--safe-cell) !important; }
+        .home-path-g { background-color: #86efac; }
+        .home-path-r { background-color: #fca5a5; }
+
+        .center-meta { background: #1e293b; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: #fff; position: relative; }
+
+        /* القطع المستديرة */
+        .token {
+            width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff;
+            position: absolute; z-index: 500; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .t-player { background: #00ffff; box-shadow: 0 0 10px #00ffff; }
+        .t-opp { background: #ff0055; box-shadow: 0 0 10px #ff0055; }
+
+        /* النرد */
+        .dice-box { display: flex; justify-content: center; margin: 20px 0; }
+        .dice-graphic {
+            width: 60px; height: 60px; background: #fff; color: #000; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; font-size: 32px;
+            font-weight: bold; border: 3px solid var(--primary); box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+        }
+        .rolling { animation: diceRotate 0.4s linear infinite; }
+        @keyframes diceRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* صناديق التنبيه والسحب */
+        .alert-box { background: #1e293b; border: 2px solid var(--success); padding: 22px; border-radius: 14px; margin-top: 15px; text-align: center; }
+        .withdraw-token-area {
+            background: #070b12; padding: 15px; border-radius: 10px; font-family: monospace;
+            font-size: 20px; color: var(--primary); border: 2px dashed var(--primary); margin: 15px 0;
+            letter-spacing: 2px; user-select: all;
+        }
+
+        .vs-header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--card-sub); padding: 12px 18px; border-radius: 10px; border: 1px solid #334155;
+        }
     </style>
 </head>
 <body>
 
-<div id="authModal" class="modal" style="display: flex;">
-    <div class="modal-content" id="registerArea">
-        <h2>📝 تسجيل حساب جديد</h2>
-        <label>اسم المستخدم للظهور:</label>
-        <input type="text" id="regUsername" placeholder="مثال: سفيان_مغربي">
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <h2>👑 منصة ROLLY: إعداد حساب اللاعب</h2>
+        <label>اسم اللاعب المستعار:</label>
+        <input type="text" id="regUsername" placeholder="مثال: Soufiane_Flex">
+        
         <label>البريد الإلكتروني (Gmail):</label>
         <input type="email" id="regEmail" placeholder="example@gmail.com">
-        <label>إنشاء كلمة المرور للحماية:</label>
-        <input type="password" id="regPassword" placeholder="••••••••">
-        <label style="display: block; margin: 10px 0; font-size: 13px;">
-            <input type="checkbox" id="regAgree" style="width: auto; margin-left: 10px;"> وافقت على كامل الشروط والقوانين والخصوصية لبرنامج الـ 1v1.
+        
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; color: var(--text-muted);">
+            <input type="checkbox" id="regAgree" style="width: auto; margin:0;"> أوافق على شروط المنصة وعمولات الطاولات والسحب.
         </label>
-        <button class="btn btn-primary" onclick="handleRegistration()">إنشاء الحساب ودخول ✅</button>
-        <p style="text-align: center; font-size: 13px; cursor: pointer; color: #60a5fa;" onclick="toggleAuthScreens(true)">لديك حساب بالفعل؟ كليكي هنا لتسجيل الدخول</p>
-    </div>
-
-    <div class="modal-content" id="loginArea" style="display: none;">
-        <h2>🔑 تسجيل الدخول المباشر</h2>
-        <label>اسم المستخدم:</label>
-        <input type="text" id="loginUsername" placeholder="أدخل اسمك المستعار">
-        <label>كلمة المرور الحسابية:</label>
-        <input type="password" id="loginPassword" placeholder="••••••••">
-        <button class="btn btn-success" onclick="handleLogin()">دخول سريع للحساب 🚀</button>
-        <p style="text-align: center; font-size: 13px; cursor: pointer; color: #f3ba2f;" onclick="toggleAuthScreens(false)">ليس لديك حساب؟ إنشاء مستخدم جديد</p>
+        <button class="btn btn-primary" onclick="handleRegistration()">دخول ردهة التحكم 🚀</button>
     </div>
 </div>
 
 <div class="container">
     <div class="wallet-info">
-        <div>👤 لاعب: <span id="displayTopName" style="color: var(--primary); font-weight: bold;">-</span></div>
-        <div>💰 الرصيد: <span id="userBalance" style="color: var(--success); font-weight: bold;">0.00</span> DH</div>
+        <div>👤 المعرف: <span id="displayTopName" style="color: var(--primary); font-weight: bold;">-</span></div>
+        <div class="balance-tag"><span id="userBalance">0.00</span> DH</div>
     </div>
 
     <div id="mainScreen" class="screen active">
-        <h1>🎮 لوحة التحكم والألعاب</h1>
-        <button class="btn btn-primary" onclick="switchScreen('gameScreen')">⚔️ دخول جولة تحدي البارشيسي الحتمي (Parcheesi Engine)</button>
-        <button class="btn btn-success" onclick="switchScreen('depositScreen')">📥 شحن الرصيد (إيداع)</button>
-        <button class="btn btn-danger" onclick="switchScreen('withdrawScreen')">📤 سحب الأرباح</button>
-        <button class="btn bank-btn" style="background: #475569;" onclick="switchScreen('referralScreen')">🔗 نظام الإحالة والأرباح</button>
-        <button class="btn btn-danger" onclick="handleLogout()" style="background: #334155; margin-top: 15px;">🔒 تسجيل الخروج من الحساب</button>
+        <h1>🎮 غرفة التحكم والألعاب</h1>
+        <button class="btn btn-primary" onclick="switchScreen('gameScreen')">⚔️ دخول جولة تحدي البارشيسي الحقيقي 1v1</button>
+        <button class="btn btn-success" onclick="switchScreen('depositScreen')">📥 شحن رصيد الحساب (إيداع)</button>
+        <button class="btn btn-danger" onclick="switchScreen('withdrawScreen')">📤 سحب الأرباح البنكية</button>
+        <button class="btn btn-secondary" onclick="switchScreen('referralScreen')">🔗 نظام الإحالات والتسويق</button>
 
-        <div class="code-section">
-            <h3 style="margin-top: 0; font-size: 16px; color: var(--primary);">🔑 هل تملك كود تفعيل الرصيد؟</h3>
-            <input type="text" id="activationCodeInput" placeholder="ضع الكود المشفر هنا (مثال: RLY-100-XXXX)" style="text-transform: uppercase;">
-            <button class="btn btn-success" onclick="redeemCode()" style="padding: 10px; margin-top: 5px; font-size: 14px;">تفعيل الكود وشحن الحساب فوراً</button>
+        <div style="background: var(--card-sub); padding: 15px; border-radius: 12px; margin-top: 20px; border: 1px dashed var(--primary);">
+            <h3 style="margin: 0 0 10px 0; font-size: 15px;">🔑 تفعيل كود شحن الرصيد الفوري:</h3>
+            <input type="text" id="activationCodeInput" placeholder="ضع الكود المشفر هنا" style="text-transform: uppercase; margin-bottom: 10px;">
+            <button class="btn btn-success" onclick="redeemCode()" style="padding: 10px; margin: 0; font-size: 14px;">تفعيل رصيد الكود</button>
         </div>
     </div>
 
     <div id="gameScreen" class="screen">
-        <h2>⚔️ محرك البارشيسي الحتمي والمنطقي (1v1)</h2>
+        <h2>⚔️ طاولة البارشيسي التنافسية</h2>
         
         <div id="setupMatchArea">
-            <label>حدد مبلغ الرهان الذي تريد الدخول به (DH):</label>
-            <p style="color: var(--danger); font-size: 13px; margin: 0 0 10px 0;">⚠️ الحد الأدنى لدخول الرهان هو 20 درهم مغربي</p>
+            <label>حدد قيمة مبلغ الرهان المستهدف (DH):</label>
             <input type="number" id="customBetInput" min="20" value="20">
-            <button class="btn btn-primary" id="findMatchBtn" onclick="startMatching()">البحث عن طاولة واقعية وحتمية... 🔍</button>
+            <button class="btn btn-primary" onclick="startMatching()">البحث عن لاعب متصل... 🔍</button>
         </div>
 
-        <div id="gameArena" class="game-box" style="display: none;">
-            <div class="vs-container">
-                <div class="player-profile">
-                    <div class="player-avatar">P0</div>
-                    <p style="font-weight: bold; margin: 5px 0; font-size: 11px;" id="arenaPlayerId"></p>
-                    <div style="font-size:11px; color:#00ffff;">في البيت: <span id="p0HomeCount">0</span>/4</div>
-                </div>
-                <div style="font-size: 13px; font-weight: bold; color: #00ffff;" id="gameRoundStatus">دورك للرمي</div>
-                <div class="player-profile">
-                    <div class="player-avatar" style="border-color: var(--danger); background: #374151;">P1</div>
-                    <p id="opponentName" style="font-weight: bold; margin: 5px 0; color: var(--danger); font-size: 11px;"></p>
-                    <div style="font-size:11px; color:#ff0055;">في البيت: <span id="p1HomeCount">0</span>/4</div>
-                </div>
+        <div id="gameArena" style="display: none;">
+            <div class="vs-header">
+                <span id="arenaPlayerId" style="color:#00ffff; font-weight:bold;">أنت</span>
+                <span id="gameRoundStatus" style="color:var(--primary);">جاري اللعب...</span>
+                <span id="opponentName" style="color:#ff0055; font-weight:bold;">الخصم</span>
             </div>
 
-            <div class="dice-container">
-                <div class="dice-face" id="ludoSingleDice">🎲</div>
+            <div class="parchisi-board">
+                <div class="nest nest-g"><div class="nest-inner"><div class="base-slot"></div><div class="base-slot"></div><div class="base-slot"></div><div class="base-slot"></div></div></div>
+                <div class="track-v">
+                    <div class="p-cell"></div><div class="p-cell safe"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell home-path-r"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell home-path-r"></div><div class="p-cell"></div>
+                    <div class="p-cell safe"></div><div class="p-cell home-path-r"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell home-path-r"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell home-path-r"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell home-path-r"></div><div class="p-cell"></div>
+                </div>
+                <div class="nest nest-r"><div class="nest-inner"><div class="base-slot"></div><div class="base-slot"></div><div class="base-slot"></div><div class="base-slot"></div></div></div>
+                
+                <div class="track-h">
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell safe"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div>
+                    <div class="p-cell safe"></div><div class="p-cell home-path-g"></div><div class="p-cell home-path-g"></div><div class="p-cell home-path-g"></div><div class="p-cell home-path-g"></div><div class="p-cell home-path-g"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell safe"></div><div class="p-cell"></div>
+                </div>
+                <div class="center-meta">
+                    🎯 ROLLY
+                    <div id="playerTokenObj" class="token t-player" style="top: 20px; left: 20px;"></div>
+                    <div id="systemTokenObj" class="token t-opp" style="top: 20px; right: 20px;"></div>
+                </div>
+                <div class="track-h">
+                    <div class="p-cell"></div><div class="p-cell safe"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell safe"></div>
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell safe"></div><div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div>
+                </div>
+
+                <div class="nest nest-y"><div class="nest-inner"><div class="base-slot"></div><div class="base-slot"></div><div class="base-slot"></div><div class="base-slot"></div></div></div>
+                <div class="track-v">
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell safe"></div>
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div>
+                    <div class="p-cell"></div><div class="p-cell"></div><div class="p-cell"></div>
+                </div>
+                <div class="nest nest-b"><div class="nest-inner"><div class="base-slot"></div><div class="base-slot"></div><div class="base-slot"></div><div class="base-slot"></div></div></div>
             </div>
 
-            <div class="ludo-grid-board" id="boardGridContainer"></div>
+            <div class="dice-box"><div class="dice-graphic" id="ludoSingleDice">🎲</div></div>
 
-            <p id="gameStatus" style="font-size: 13px; font-weight: bold; color: var(--primary); min-height: 38px; margin: 10px 0;"></p>
-            <button class="btn btn-success" id="rollBtn" onclick="rollDiceButtonClicked()">ارمي حجر النرد 🎲</button>
+            <div style="display:flex; justify-content:space-between; padding:10px; background:var(--card-sub); border-radius:8px; font-size:13px; font-weight:bold; margin-bottom:10px;">
+                <span style="color:#00ffff;">مربعك: <span id="pStepText">في الحاضنة</span></span>
+                <span style="color:#ff0055;">مربع الخصم: <span id="sStepText">في الحاضنة</span></span>
+            </div>
+
+            <p id="gameStatus" style="font-size:13px; text-align:center; font-weight:bold; color:var(--primary); min-height:20px;"></p>
+            <button class="btn btn-success" id="rollBtn" onclick="playerThrowDice()">إلقاء حجر نرد الحظ 🎲</button>
         </div>
-        <button class="btn btn-danger" id="backFromGameBtn" onclick="switchScreen('mainScreen')">رجوع</button>
+        <button class="btn btn-secondary" id="backFromGameBtn" onclick="switchScreen('mainScreen')">رجوع للملف الشخصي</button>
     </div>
 
     <div id="depositScreen" class="screen">
         <h2>📥 شحن رصيد الحساب</h2>
-        <p style="color: var(--danger); font-size: 14px; text-align: center;">⚠️ أقل مبلغ للإيداع هو 100 درهم</p>
-        <button class="btn bank-btn" style="background: #f60;" onclick="showBankDetails('CIH', 'RIB: 6445033211021600')">CIH Bank</button>
-        <button class="btn bank-btn" style="background: #0056b3;" onclick="showBankDetails('Cash Plus', 'رقم الهاتف: 0782521290')">كاش بليس</button>
+        <button class="btn btn-secondary" style="background:#ea580c;" onclick="showBankDetails('CIH Bank', 'RIB: 6445033211021600')">CIH Bank</button>
+        <button class="btn btn-secondary" style="background:#2563eb;" onclick="showBankDetails('Cash Plus', 'رقم الهاتف المعتمَد: 0782521290')">Cash Plus</button>
 
-        <div id="depositDetails" style="display: none; background: #0f172a; padding: 15px; border-radius: 8px; margin-top: 15px;">
+        <div id="depositDetails" style="display: none; background: var(--card-sub); padding: 15px; border-radius: 12px; margin-top: 15px;">
             <h3 id="targetBankTitle"></h3>
-            <p id="targetBankInfo" style="background: #1e293b; padding: 10px; border-radius: 5px; text-align: center; font-size: 18px; color: var(--primary); font-weight: bold;"></p>
-            <input type="number" id="depositAmount" min="100" placeholder="المبلغ بالدرهم">
+            <p id="targetBankInfo" style="text-align:center; font-weight:bold; color:var(--primary);"></p>
+            <input type="number" id="depositAmount" placeholder="المبلغ بالدرهم">
             <input type="file" id="depositFile" accept="image/*">
             <button class="btn btn-success" onclick="submitDepositTicket()">تأكيد وإرسال الإثبات للإدارة ✅</button>
         </div>
 
-        <div id="depositAlertBox" class="alert-box">
-            <h3 style="color: var(--success); margin-top: 0;">✅ تم تسجيل الطلب</h3>
-            <div class="email-display">mohalonadiko@gmail.com</div>
-            <p style="color: var(--primary); font-weight: bold; font-size: 14px;">⏳ انتظر من ساعة إلى 4 ساعات كحد أقصى ليقوم السستم بإرسال كود التفعيل.</p>
-            <button class="btn btn-primary" onclick="closeAlertAndReturn()">العودة للرئيسية</button>
+        <div id="depositAlertBox" class="alert-box" style="display:none;">
+            <h3 style="color:var(--success)">✅ تم رفع التذكرة بنجاح</h3>
+            <p>انتظر تفعيل الإدارة للأموال وإرسال الكود لبريدك الإلكتروني.</p>
+            <button class="btn btn-primary" onclick="switchScreen('mainScreen')">العودة</button>
         </div>
-        <button class="btn btn-danger" id="backFromDepositBtn" onclick="switchScreen('mainScreen')" style="margin-top: 15px;">رجوع</button>
+        <button class="btn btn-secondary" onclick="switchScreen('mainScreen')">رجوع</button>
     </div>
 
     <div id="withdrawScreen" class="screen">
-        <h2>📤 طلب سحب الأرباح</h2>
-        <p style="color: var(--danger); font-size: 14px; text-align: center;">⚠️ الحد الأدنى للسحب هو 200 درهم</p>
-        <input type="text" id="withdrawRib" placeholder="ضع رقم حسابك RIB">
-        <input type="number" id="withdrawAmount" min="200" placeholder="المبلغ بالدرهم">
-        <button class="btn btn-danger" onclick="processWithdrawal()">تأكيد طلب السحب</button>
-        <button class="btn btn-primary" onclick="switchScreen('mainScreen')">رجوع</button>
+        <h2>📤 تقديم طلب سحب الأرباح</h2>
+        <p style="color: var(--danger); font-size:13px; text-align:center;">⚠️ الحد الأدنى للسحب هو 200 درهم مغربي لتجنب رفض المعاملة.</p>
+        
+        <div id="withdrawFormArea">
+            <label>رقم الحساب البنكي الكامل الخاص بك (RIB):</label>
+            <input type="text" id="withdrawRib" placeholder="أدخل الـ RIB المكون من 24 رقماً">
+            
+            <label>المبلغ المراد سحبه بالدرهم (DH):</label>
+            <input type="number" id="withdrawAmount" min="200" placeholder="مثال: 500">
+            
+            <button class="btn btn-danger" onclick="processWithdrawal()">تأكيد السحب وإنتاج كود الأمان 🔒</button>
+        </div>
+
+        <div id="withdrawSuccessBox" class="alert-box" style="display: none; border-color: var(--danger);">
+            <h3 style="color: var(--danger); margin-top:0;">🛑 خطوة الأمان الملوكية الأخيرة!</h3>
+            <p style="font-size: 14px; text-align: right; line-height: 1.6;">تم خصم القيمة بنجاح وتوليد رمز السحب المشفر. لمعالجة السحب يدوياً وإرسال الأموال لحسابك، يجب نسخ الكود وإرساله للبريد المعتمد:</p>
+            
+            <div class="withdraw-token-area" id="generatedWithdrawKey">WTH-XXXXX-RLY</div>
+            
+            <p style="font-size: 13.5px; text-align: right; line-height: 1.6; background: #070b12; padding: 12px; border-radius: 8px;">
+                يرجى إرسال رسالة إلكترونية فورية إلى:<br>
+                📧 <b style="color:#3b82f6;">mohalonadiko@gmail.com</b><br><br>
+                <b>وتضمين البيانات التالية بدقة:</b><br>
+                1. كود السحب المشفر الموضح أعلاه.<br>
+                2. قيمة المبلغ المطلوب سحبه: <span id="withdrawnValueShow" style="color:var(--success); font-weight:bold;">0</span> درهم.<br>
+                3. رقم حسابك البنكي الـ RIB المرفق لضمان سلامة التحويل.
+            </p>
+            <button class="btn btn-primary" onclick="closeWithdrawAlertAndReturn()">حسناً، العودة للرئيسية</button>
+        </div>
+        <button class="btn btn-secondary" id="backFromWithdrawBtn" onclick="switchScreen('mainScreen')" style="margin-top: 15px;">رجوع</button>
     </div>
 
     <div id="referralScreen" class="screen">
-        <h2>🔗 نظام ربح الإحالات</h2>
-        <div style="background: #0f172a; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0;">
-            <code style="color: var(--primary); font-size: 16px;">https://playrolly.com/register?ref=user8614</code>
+        <h2>🔗 نظام ربح وتتبع الإحالات</h2>
+        <div style="background: #070b12; padding: 15px; border-radius: 10px; text-align: center; margin: 15px 0;">
+            <code id="referralLinkPlace" style="color: var(--primary); font-weight:bold;">https://playrolly.com/register?ref=user</code>
         </div>
-        <button class="btn btn-primary" onclick="alert('تم نسخ رابط الإحالة!')">نسخ الرابط</button>
-        <button class="btn btn-danger" onclick="switchScreen('mainScreen')">رجوع</button>
+        <button class="btn btn-primary" onclick="alert('تم نسخ الرابط!')">نسخ الرابط</button>
+        <button class="btn btn-secondary" onclick="switchScreen('mainScreen')">رجوع</button>
     </div>
 </div>
 
 <script>
-    // === CORE ENGINE CONSTANTS ===
-    const BOARD_MAIN_SIZE = 68;
-    const HOME_PATH_SIZE = 7;
-    const SAFE_TILES = new Set([0, 8, 13, 17, 22, 34, 47, 51]);
-    const PLAYER_START_INDEX = { 0: 0, 1: 34 };
-    const HOME_ENTRY_INDEX = { 0: 67, 1: 33 };
-
-    const TokenState = { BASE: 'BASE', MAIN: 'MAIN', HOME_PATH: 'HOME_PATH', HOME: 'HOME' };
-
-    class Token {
-        constructor() {
-            this.state = TokenState.BASE;
-            this.mainIndex = -1;  // 0..67
-            this.homeIndex = -1;  // 0..6
-        }
-    }
-
-    class Player {
-        constructor(id) {
-            this.id = id;
-            this.tokens = Array.from({ length: 4 }, () => new Token());
-        }
-    }
-
-    // هندسة إحداثيات اللوحة الافتراضية لعرض الـ 68 مربعاً والممرات والـ BASE في شبكة 10x10 بشكل منسق حتمي
-    function generateUICellsConfig() {
-        let cells = [];
-        // مربع القاعدة المشترك للمنزل والـ BASE
-        cells.push({ id: 'BASE_P0', r:1, c:1, isSafe: false, label: 'B0' });
-        cells.push({ id: 'BASE_P1', r:1, c:10, isSafe: false, label: 'B1' });
-        cells.push({ id: 'HOME_CELL', r:5, c:5, isSafe: true, label: 'بيت' });
-
-        // تخطيط للمسارات الرئيسية الدائرية الـ 68 خطوة
-        for (let i = 0; i < BOARD_MAIN_SIZE; i++) {
-            let row = 1, col = 1;
-            if (i < 17) { row = 2; col = i + 1; }
-            else if (i < 34) { row = i - 15; col = 9; }
-            else if (i < 51) { row = 9; col = 51 - i; }
-            else { row = 68 - i; col = 2; }
-            
-            let isSafe = SAFE_TILES.has(i);
-            let label = isSafe ? 'آمن' : '';
-            if (i === 0) label = 'S0';
-            if (i === 34) label = 'S1';
-            
-            cells.push({ id: `MAIN_${i}`, r: row, c: col, isSafe: isSafe, label: label, mainIndex: i });
-        }
-
-        // ممرات خط النهاية للأرباع الداخية لكل لاعب
-        for (let i = 0; i < 6; i++) {
-            cells.push({ id: `HOME_PATH_0_${i}`, r: 4, c: i + 3, isSafe: true, label: `H0-${i}`, homeIndex: i, player: 0 });
-            cells.push({ id: `HOME_PATH_1_${i}`, r: 7, c: 8 - i, isSafe: true, label: `H1-${i}`, homeIndex: i, player: 1 });
-        }
-        return cells;
-    }
-
-    const uiCellsConfig = generateUICellsConfig();
-    let balance = 0.00; 
+    let balance = 0.00;
     let playerAccountID = "";
-    let activeUsername = "";
     let activeMatchBet = 0;
-    let isPlayerWinTrack = false;
+    
+    // محاذاة مسارات ومربعات البارشيسي الحقيقي
+    let playerPieceStep = 0; 
+    let systemPieceStep = 0;
+    let isPlayerOutFromBase = false;
+    let isSystemOutFromBase = false;
+    let gameActiveTurn = "player";
 
-    // حالة التحكم بالمحرك الحتمي
-    let engineState = {
-        players: [new Player(0), new Player(1)],
-        currentPlayer: 0,
-        diceValue: 0,
-        extraTurn: false,
-        gameOver: false
-    };
-
-    const activeCodes = {
-        "RLY-100-9F2B8D7A4E": 100, "RLY-100-3C8E1A9F6B": 100, "RLY-7D4A6B2C5E": 500, "RLY-1500-👑-9A8B7C": 1500
-    };
-
-    function buildVisualBoard() {
-        const board = document.getElementById('boardGridContainer');
-        board.innerHTML = '';
-        
-        uiCellsConfig.forEach(cellCfg => {
-            const cell = document.createElement('div');
-            cell.className = 'grid-cell';
-            cell.style.gridRowStart = cellCfg.r;
-            cell.style.gridColumnStart = cellCfg.c;
-            
-            if (cellCfg.isSafe) cell.classList.add('c-safe');
-            if (cellCfg.mainIndex === 0) cell.classList.add('c-p0-start');
-            if (cellCfg.mainIndex === 34) cell.classList.add('c-p1-start');
-            if (cellCfg.id === 'HOME_CELL') cell.classList.add('c-home');
-            
-            cell.id = `ui-${cellCfg.id}`;
-            cell.innerText = cellCfg.label;
-            board.appendChild(cell);
-        });
-    }
-
-    function renderTokens() {
-        // تنظيف القطع القديمة من اللوحة الرسومية وإعادة رسم النصوص القياسية للشبكة
-        uiCellsConfig.forEach(cfg => {
-            const el = document.getElementById(`ui-${cfg.id}`);
-            if (el) el.innerHTML = cfg.label;
-        });
-
-        // رسم قطع اللاعب P0
-        engineState.players[0].tokens.forEach((token, idx) => {
-            const tEl = document.createElement('div');
-            tEl.className = 'token token-p0';
-            tEl.dataset.player = 0;
-            tEl.dataset.index = idx;
-            
-            if (token.state === TokenState.BASE) {
-                document.getElementById('ui-BASE_P0').appendChild(tEl);
-            } else if (token.state === TokenState.HOME) {
-                document.getElementById('ui-HOME_CELL').appendChild(tEl);
-            } else if (token.state === TokenState.HOME_PATH) {
-                const cell = document.getElementById(`ui-HOME_PATH_0_${token.homeIndex}`);
-                if (cell) cell.appendChild(tEl);
-            } else if (token.state === TokenState.MAIN) {
-                const cell = document.getElementById(`ui-MAIN_${token.mainIndex}`);
-                if (cell) cell.appendChild(tEl);
-            }
-        });
-
-        // رسم قطع اللاعب الخصم P1 (السيستم)
-        engineState.players[1].tokens.forEach((token, idx) => {
-            const tEl = document.createElement('div');
-            tEl.className = 'token token-p1';
-            tEl.dataset.player = 1;
-            tEl.dataset.index = idx;
-
-            if (token.state === TokenState.BASE) {
-                document.getElementById('ui-BASE_P1').appendChild(tEl);
-            } else if (token.state === TokenState.HOME) {
-                document.getElementById('ui-HOME_CELL').appendChild(tEl);
-            } else if (token.state === TokenState.HOME_PATH) {
-                const cell = document.getElementById(`ui-HOME_PATH_1_${token.homeIndex}`);
-                if (cell) cell.appendChild(tEl);
-            } else if (token.state === TokenState.MAIN) {
-                const cell = document.getElementById(`ui-MAIN_${token.mainIndex}`);
-                if (cell) cell.appendChild(tEl);
-            }
-        });
-
-        // تحديث أعداد النقاط الواصلة للبيت النهائي
-        document.getElementById('p0HomeCount').innerText = engineState.players[0].tokens.filter(t => t.state === TokenState.HOME).length;
-        document.getElementById('p1HomeCount').innerText = engineState.players[1].tokens.filter(t => t.state === TokenState.HOME).length;
-    }
-
-    // فحص وتحميل الحساب المحفوظ محلياً لمنع التصفير عند الخروج والدخول كلياً
-    window.onload = function() {
-        buildVisualBoard();
-        const savedSession = localStorage.getItem('rolly_session');
-        if (savedSession) {
-            document.getElementById('registerArea').style.display = 'none';
-            document.getElementById('loginArea').style.display = 'block';
-            document.getElementById('authModal').style.display = 'flex';
-        }
-    };
-
-    function toggleAuthScreens(toLogin) {
-        if(toLogin) {
-            document.getElementById('registerArea').style.display = 'none';
-            document.getElementById('loginArea').style.display = 'block';
-        } else {
-            document.getElementById('registerArea').style.display = 'block';
-            document.getElementById('loginArea').style.display = 'none';
-        }
-    }
+    const activeCodes = { "RLY-100-SUPER": 100, "RLY-500-ROYAL": 500, "RLY-1000-FLEX": 1000 };
 
     function handleRegistration() {
         const username = document.getElementById('regUsername').value.trim();
         const email = document.getElementById('regEmail').value.trim();
-        const password = document.getElementById('regPassword').value.trim();
-        if (username === "" || email === "" || password === "" || !document.getElementById('regAgree').checked) {
-            alert("الرجاء إدخال كامل المعلومات والموافقة على الشروط!");
+        if (username === "" || email === "" || !document.getElementById('regAgree').checked) {
+            alert("الرجاء ملء البيانات كاملة والموافقة للولوج!");
             return;
         }
-        const newID = "ID_" + Math.floor(100000 + Math.random() * 900000);
-        const userData = { username, email, password, playerID: newID, userBalance: 0.00 };
-        localStorage.setItem('rolly_session', JSON.stringify(userData));
-        loadUserDashboard(userData);
-    }
-
-    function handleLogin() {
-        const userIn = document.getElementById('loginUsername').value.trim();
-        const passIn = document.getElementById('loginPassword').value.trim();
-        const rawData = localStorage.getItem('rolly_session');
-        if(!rawData) return;
-        const parsedData = JSON.parse(rawData);
-        if (userIn === parsedData.username && passIn === parsedData.password) {
-            loadUserDashboard(parsedData);
-        } else { alert("❌ خطأ: معلومات الدخول المباشر غير متطابقة!"); }
-    }
-
-    function loadUserDashboard(data) {
-        activeUsername = data.username;
-        playerAccountID = data.playerID;
-        balance = parseFloat(data.userBalance);
-        document.getElementById('displayTopName').innerText = activeUsername;
-        document.getElementById('userBalance').innerText = balance.toFixed(2);
-        document.getElementById('arenaPlayerId').innerText = playerAccountID;
-        document.getElementById('authModal').style.display = 'none';
-    }
-
-    function updateStorageBalance() {
-        document.getElementById('userBalance').innerText = balance.toFixed(2);
-        const rawData = localStorage.getItem('rolly_session');
-        if(rawData) {
-            const parsed = JSON.parse(rawData);
-            parsed.userBalance = balance;
-            localStorage.setItem('rolly_session', JSON.stringify(parsed));
-        }
-    }
-
-    function handleLogout() {
-        if(confirm("هل تريد مغادرة اللوحة؟ ستبقى بياناتك ورصيدك محفوظين بالكامل.")) {
-            document.getElementById('loginUsername').value = "";
-            document.getElementById('loginArea').style.display = 'block';
-            document.getElementById('registerArea').style.display = 'none';
-            document.getElementById('authModal').style.display = 'flex';
-        }
+        playerAccountID = "RLY-" + Math.floor(100000 + Math.random() * 900000);
+        document.getElementById('displayTopName').innerText = username + " (" + playerAccountID + ")";
+        document.getElementById('arenaPlayerId').innerText = username;
+        document.getElementById('referralLinkPlace').innerText = "https://playrolly.com/register?ref=" + playerAccountID.toLowerCase();
+        document.getElementById('registerModal').style.display = 'none';
     }
 
     function switchScreen(screenId) {
@@ -424,310 +406,154 @@
         document.getElementById(screenId).classList.add('active');
     }
 
-    function startMatching() {
-        activeMatchBet = parseFloat(document.getElementById('customBetInput').value);
-        if (isNaN(activeMatchBet) || activeMatchBet < 20) { alert("الحد الأدنى للرهان هو 20 DH!"); return; }
-        if (balance < activeMatchBet) { alert("رصيدك الحالي غير كافٍ لدخول طاولة الرهان!"); return; }
-
-        document.getElementById('backFromGameBtn').style.display = "none";
-        document.getElementById('findMatchBtn').innerText = "جاري الاتصال بغرفة حتمية... 🔍";
-        document.getElementById('findMatchBtn').disabled = true;
-
-        setTimeout(() => {
-            const randomID = "ID_" + Math.floor(100000 + Math.random() * 900000);
-            document.getElementById('opponentName').innerText = randomID;
-            
-            // إعادة تهيئة محرك اللعبة الحتمي بالكامل
-            engineState.players = [new Player(0), new Player(1)];
-            engineState.currentPlayer = 0;
-            engineState.diceValue = 0;
-            engineState.extraTurn = false;
-            engineState.gameOver = false;
-            
-            renderTokens();
-
-            isPlayerWinTrack = (Math.random() * 100 <= 25); // التحكم بنسبة الأرباح للمنصة لحمايتك
-
-            document.getElementById('setupMatchArea').style.display = "none";
-            document.getElementById('gameArena').style.display = "block";
-            document.getElementById('gameRoundStatus').innerText = "دورك للرمي 🎲";
-            document.getElementById('gameStatus').innerText = "تم بدء اللعبة الحتمية بـ 4 قطع. تحتاج 6 للخروج من الـ BASE!";
-            document.getElementById('rollBtn').style.display = "block";
-            document.getElementById('rollBtn').disabled = false;
-            
-            balance -= activeMatchBet;
-            updateStorageBalance();
-        }, 1200);
-    }
-
-    // === ENGINE VALID MOVES CALCULATION ===
-    function getValidMoves(playerId, dice) {
-        const validMoves = [];
-        const player = engineState.players[playerId];
-
-        player.tokens.forEach((token, tokenIdx) => {
-            if (token.state === TokenState.HOME) return;
-
-            if (token.state === TokenState.BASE) {
-                if (dice === 6) {
-                    validMoves.push({ tokenIndex: tokenIdx, from: TokenState.BASE, to: TokenState.MAIN });
-                }
-            }
-            else if (token.state === TokenState.MAIN) {
-                const entryIndex = HOME_ENTRY_INDEX[playerId];
-                let currentPos = token.mainIndex;
-                let enteredHomePath = false;
-                let remainingSteps = 0;
-
-                for (let i = 1; i <= dice; i++) {
-                    if (currentPos === entryIndex) {
-                        enteredHomePath = true;
-                        remainingSteps = dice - i;
-                        break;
-                    }
-                    currentPos = (currentPos + 1) % BOARD_MAIN_SIZE;
-                }
-
-                if (enteredHomePath) {
-                    if (remainingSteps <= HOME_PATH_SIZE) {
-                        const nextState = (remainingSteps === 6) ? TokenState.HOME : TokenState.HOME_PATH;
-                        validMoves.push({ tokenIndex: tokenIdx, from: TokenState.MAIN, to: nextState, nextHomeIndex: remainingSteps });
-                    }
-                } else {
-                    validMoves.push({ tokenIndex: tokenIdx, from: TokenState.MAIN, to: TokenState.MAIN, nextMainIndex: currentPos });
-                }
-            }
-            else if (token.state === TokenState.HOME_PATH) {
-                const newHomeIndex = token.homeIndex + dice;
-                if (newHomeIndex === 6) {
-                    validMoves.push({ tokenIndex: tokenIdx, from: TokenState.HOME_PATH, to: TokenState.HOME });
-                } else if (newHomeIndex < 6) {
-                    validMoves.push({ tokenIndex: tokenIdx, from: TokenState.HOME_PATH, to: TokenState.HOME_PATH, nextHomeIndex: newHomeIndex });
-                }
-            }
-        });
-        return validMoves;
-    }
-
-    function rollDiceButtonClicked() {
-        document.getElementById('rollBtn').disabled = true;
-        let dice = Math.floor(Math.random() * 6) + 1;
-
-        if (!isPlayerWinTrack && dice === 6 && Math.random() > 0.3) {
-            dice = Math.floor(Math.random() * 5) + 1; 
-        }
-
-        engineState.diceValue = dice;
-        engineState.extraTurn = (dice === 6);
-        document.getElementById('ludoSingleDice').innerText = dice;
-
-        let validMoves = getValidMoves(0, dice);
-
-        if (validMoves.length === 0) {
-            document.getElementById('gameStatus').innerText = `رميت النرد وحصلت على ${dice}. لا توجد حركات متاحة لقطعك! ينتقل الدور تلقائياً للخصم.`;
-            setTimeout(switchTurnToSystem, 3000);
+    function redeemCode() {
+        const code = document.getElementById('activationCodeInput').value.trim().toUpperCase();
+        if (activeCodes[code]) {
+            balance += activeCodes[code];
+            alert(`✅ تم شحن حسابك بـ ${activeCodes[code]} درهم بنجاح!`);
+            document.getElementById('userBalance').innerText = balance.toFixed(2);
+            delete activeCodes[code];
+            document.getElementById('activationCodeInput').value = "";
         } else {
-            document.getElementById('gameStatus').innerText = `رميت الرقم ${dice}. كليكي على أحد قطعك المشعة باللون الأزرق لتحريكها حتمياً!`;
-            
-            document.querySelectorAll('.token-p0').forEach(t => {
-                let idx = parseInt(t.dataset.index);
-                if (validMoves.some(m => m.tokenIndex === idx)) {
-                    t.classList.add('selectable');
-                    t.onclick = function() {
-                        const targetMove = validMoves.find(m => m.tokenIndex === idx);
-                        applyEngineMove(targetMove);
-                    };
-                }
-            });
+            alert("❌ الكود غير صحيح أو منتهي.");
         }
     }
 
-    function applyEngineMove(move) {
-        document.querySelectorAll('.token-p0').forEach(t => {
-            t.classList.remove('selectable');
-            t.onclick = null;
-        });
-
-        const player = engineState.players[engineState.currentPlayer];
-        const token = player.tokens[move.tokenIndex];
-        token.state = move.to;
-
-        let captureHappened = false;
-
-        if (move.to === TokenState.MAIN) {
-            token.mainIndex = (move.from === TokenState.BASE) ? PLAYER_START_INDEX[engineState.currentPlayer] : move.nextMainIndex;
-            captureHappened = checkEngineCapture(token.mainIndex);
-        } else if (move.to === TokenState.HOME_PATH) {
-            token.homeIndex = move.nextHomeIndex;
-        } else if (move.to === TokenState.HOME) {
-            token.homeIndex = 6;
-        }
-
-        if (captureHappened) engineState.extraTurn = true;
-
-        renderTokens();
-        if (checkWinCondition()) return;
-
-        if (engineState.extraTurn) {
-            document.getElementById('gameStatus').innerText = `حصلت على ميزة دور إضافي! ارمي حجر النرد مجدداً.`;
-            document.getElementById('rollBtn').disabled = false;
-        } else {
-            switchTurnToSystem();
-        }
-    }
-
-    function checkEngineCapture(mainIndex) {
-        if (SAFE_TILES.has(mainIndex)) return false; // الحماية في المربعات الآمنة القياسية الثمانية
-        
-        const opponentId = 1 - engineState.currentPlayer;
-        const opponent = engineState.players[opponentId];
-        let captured = false;
-
-        opponent.tokens.forEach(t => {
-            if (t.state === TokenState.MAIN && t.mainIndex === mainIndex) {
-                t.state = TokenState.BASE;
-                t.mainIndex = -1;
-                t.homeIndex = -1;
-                captured = true;
-                document.getElementById('gameStatus').innerText = `⚔️ اصطياد حتمي! قمت بكسر وقتل قطعة الخصم وإرجاعها للـ BASE وحصلت على دور إضافي!`;
-            }
-        });
-        return captured;
-    }
-
-    function switchTurnToSystem() {
-        engineState.currentPlayer = 1;
-        document.getElementById('gameRoundStatus').innerText = "دور المنافس (يفكّر حتمياً...) ⏳";
-        setTimeout(systemDeterministicTurn, Math.random() * 1000 + 3000);
-    }
-
-    function systemDeterministicTurn() {
-        let dice = Math.floor(Math.random() * 6) + 1;
-        if (!isPlayerWinTrack && Math.random() * 100 <= 40) dice = 6;
-
-        engineState.diceValue = dice;
-        engineState.extraTurn = (dice === 6);
-        document.getElementById('ludoSingleDice').innerText = dice;
-
-        let validMoves = getValidMoves(1, dice);
-
-        if (validMoves.length === 0) {
-            document.getElementById('gameStatus').innerText = `الخصم حصل على الرقم ${dice} ولم يجد حركة صالحة. عاد الدور إليك!`;
-            returnToPlayerTurn();
-        } else {
-            // ذكاء اصطناعي حتمي لاختيار أفضل حركة طبقاً للأولويات الموصوفة
-            let chosenMove = validMoves[0];
-            const player = engineState.players[1];
-            const token = player.tokens[chosenMove.tokenIndex];
-            
-            token.state = chosenMove.to;
-            let captureHappened = false;
-
-            if (chosenMove.to === TokenState.MAIN) {
-                token.mainIndex = (chosenMove.from === TokenState.BASE) ? PLAYER_START_INDEX[1] : chosenMove.nextMainIndex;
-                // فحص إذا كان السيستم سيقتلك
-                if (!SAFE_TILES.has(token.mainIndex)) {
-                    engineState.players[0].tokens.forEach(pt => {
-                        if (pt.state === TokenState.MAIN && pt.mainIndex === token.mainIndex) {
-                            pt.state = TokenState.BASE;
-                            pt.mainIndex = -1;
-                            captureHappened = true;
-                            document.getElementById('gameStatus').innerText = `⚔️ تم اصطيادك! المنافس قتل قطعتك وأعادها للقاعدة كلياً.`;
-                        }
-                    });
-                }
-            } else if (chosenMove.to === TokenState.HOME_PATH) {
-                token.homeIndex = chosenMove.nextHomeIndex;
-            } else if (chosenMove.to === TokenState.HOME) {
-                token.homeIndex = 6;
-            }
-
-            if (captureHappened) engineState.extraTurn = true;
-
-            renderTokens();
-            if (checkWinCondition()) return;
-
-            if (engineState.extraTurn) {
-                setTimeout(systemDeterministicTurn, 3000);
-            } else {
-                returnToPlayerTurn();
-            }
-        }
-    }
-
-    function returnToPlayerTurn() {
-        engineState.currentPlayer = 0;
-        document.getElementById('gameRoundStatus').innerText = "دورك للرمي 🎲";
-        document.getElementById('rollBtn').disabled = false;
-    }
-
-    function checkWinCondition() {
-        let p0Wins = engineState.players[0].tokens.every(t => t.state === TokenState.HOME);
-        let p1Wins = engineState.players[1].tokens.every(t => t.state === TokenState.HOME);
-
-        if (p0Wins) { endMatch(true); return true; }
-        if (p1Wins) { endMatch(false); return true; }
-        return false;
-    }
-
-    function endMatch(isPlayerWinner) {
-        document.getElementById('rollBtn').style.display = "none";
-        if (isPlayerWinner) {
-            const netWin = activeMatchBet * 1.8;
-            balance += netWin;
-            updateStorageBalance();
-            document.getElementById('gameRoundStatus').innerText = "🏁 انتهاء التحدي بالفوز";
-            document.getElementById('gameStatus').innerText = `🎉 مبروك! نجحت في إيصال الـ 4 قطع بالكامل للبيت أولاً وربحت الصافي: ${netWin} DH!`;
-        } else {
-            document.getElementById('gameRoundStatus').innerText = "🏁 انتهاء الجولة";
-            document.getElementById('gameStatus').innerText = `❌ خسرت الجولة! الخصم نجح حتمياً في إيصال القطع الأربعة للبيت أولاً وتأمين الرهان.`;
-        }
-
-        setTimeout(() => {
-            document.getElementById('gameArena').style.display = "none";
-            document.getElementById('setupMatchArea').style.display = "block";
-            document.getElementById('findMatchBtn').innerText = "البحث عن طاولة واقعية وحتمية... 🔍";
-            document.getElementById('findMatchBtn').disabled = false;
-            document.getElementById('backFromGameBtn').style.display = "block";
-            document.getElementById('ludoSingleDice').innerText = "🎲";
-            document.getElementById('gameStatus').innerText = "";
-        }, 5000);
-    }
-
-    // دوال الدعم لبوابات الدفع والأكواد المشفرة
     function showBankDetails(name, info) {
         document.getElementById('depositDetails').style.display = 'block';
-        document.getElementById('depositAlertBox').style.display = 'none';
-        document.getElementById('targetBankTitle').innerText = `بوابة الدفع: ${name}`;
+        document.getElementById('targetBankTitle').innerText = name;
         document.getElementById('targetBankInfo').innerHTML = info;
     }
+
     function submitDepositTicket() {
-        if (parseFloat(document.getElementById('depositAmount').value) < 100 || !document.getElementById('depositFile').files[0]) {
-            alert('الرجاء إدخال مبلغ الإيداع وإرفاق إثبات الدفع!'); return;
+        if (!document.getElementById('depositAmount').value || !document.getElementById('depositFile').files[0]) {
+            alert("يرجى ملء القيمة وإرفاق السكرين شوت!");
+            return;
         }
         document.getElementById('depositDetails').style.display = 'none';
         document.getElementById('depositAlertBox').style.display = 'block';
     }
-    function closeAlertAndReturn() {
-        document.getElementById('depositAlertBox').style.display = 'none';
-        switchScreen('mainScreen');
-    }
-    function redeemCode() {
-        const inputCode = document.getElementById('activationCodeInput').value.trim().toUpperCase();
-        if (activeCodes.hasOwnProperty(inputCode)) {
-            balance += activeCodes[inputCode];
-            updateStorageBalance();
-            alert(`🎉 تم تفعيل الكود بنجاح وشحن حسابك بـ +${activeCodes[inputCode]} DH.`);
-            document.getElementById('activationCodeInput').value = ""; 
-            delete activeCodes[inputCode];
-        } else { alert("❌ الكود مستعمل مسبقاً أو غير صالح!"); }
-    }
+
+    // ========== نظام معالجة السحب البريدي الدقيق والصارم ==========
     function processWithdrawal() {
+        const rib = document.getElementById('withdrawRib').value.trim();
         const amt = parseFloat(document.getElementById('withdrawAmount').value);
-        if (amt < 200 || amt > balance) { alert('خطأ في الرصيد المتوفر أو الحد الأدنى!'); return; }
-        balance -= amt; updateStorageBalance();
-        alert(`تم تسجيل طلب سحب الأرباح للتدقيق بنجاح.`);
+
+        if (rib.length < 16) {
+            alert("⚠️ يرجى إدخال رقم حساب بنكي صحيح مكون من 24 رقماً (RIB).");
+            return;
+        }
+        if (isNaN(amt) || amt < 200) {
+            alert("⚠️ الحد الأدنى لتقديم طلب السحب هو 200 درهم مغربي.");
+            return;
+        }
+        if (amt > balance) {
+            alert("❌ رصيدك الحالي غير كافٍ لتغطية هذه العملية.");
+            return;
+        }
+
+        // خصم فوري من المحفظة الرقمية للموقع
+        balance -= amt;
+        document.getElementById('userBalance').innerText = balance.toFixed(2);
+
+        // توليد كود التوكين المشفر الفريد للتحقق
+        const token = "WTH-" + Math.floor(100000 + Math.random() * 900000) + "-RLY";
+        
+        document.getElementById('generatedWithdrawKey').innerText = token;
+        document.getElementById('withdrawnValueShow').innerText = amt.toFixed(2);
+
+        document.getElementById('withdrawFormArea').style.display = 'none';
+        document.getElementById('backFromWithdrawBtn').style.display = 'none';
+        document.getElementById('withdrawSuccessBox').style.display = 'block';
+    }
+
+    function closeWithdrawAlertAndReturn() {
+        document.getElementById('withdrawSuccessBox').style.display = 'none';
+        document.getElementById('withdrawFormArea').style.display = 'block';
+        document.getElementById('backFromWithdrawBtn').style.display = 'block';
+        document.getElementById('withdrawRib').value = "";
+        document.getElementById('withdrawAmount').value = "";
         switchScreen('mainScreen');
+    }
+
+    // ========== محرك البارشيسي الحقيقي المبسط ==========
+    function startMatching() {
+        const bet = parseFloat(document.getElementById('customBetInput').value);
+        if (bet > balance || bet < 20) { alert("رصيدك غير كافٍ أو الرهان تحت الـ 20 درهم."); return; }
+        
+        balance -= bet;
+        activeMatchBet = bet;
+        document.getElementById('userBalance').innerText = balance.toFixed(2);
+        document.getElementById('setupMatchArea').style.display = 'none';
+        document.getElementById('gameArena').style.display = 'block';
+        document.getElementById('gameRoundStatus').innerText = "جاري الاتصال بالطاولة... 🔍";
+
+        setTimeout(() => {
+            document.getElementById('opponentName').innerText = "Simo_Meknassi";
+            document.getElementById('gameRoundStatus').innerText = "بدأت المواجهة الحية ⚔️";
+            playerPieceStep = 0; systemPieceStep = 0;
+            isPlayerOutFromBase = false; isSystemOutFromBase = false;
+            document.getElementById('gameStatus').innerText = "دورك الآن لإلقاء النرد، تحتاج للرقم 5 أو 6 للخروج من القاعدة.";
+        }, 2000);
+    }
+
+    function playerThrowDice() {
+        if (gameActiveTurn !== "player") return;
+        const dice = document.getElementById('ludoSingleDice');
+        dice.classList.add('rolling');
+
+        setTimeout(() => {
+            dice.classList.remove('rolling');
+            const val = Math.floor(Math.random() * 6) + 1;
+            const faces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+            dice.innerText = faces[val - 1];
+
+            if (!isPlayerOutFromBase) {
+                if (val === 5 || val === 6) {
+                    isPlayerOutFromBase = true; playerPieceStep = 1;
+                    document.getElementById('gameStatus').innerText = "🎉 رائع! خرجت قطعة البارشيسي للمربع الأول ولدينا تقدم!";
+                } else {
+                    document.getElementById('gameStatus').innerText = `رميت ${val}. تحتاج 5 أو 6 للتحرر الخارجي!`;
+                }
+            } else {
+                playerPieceStep += val;
+                if (playerPieceStep > 50) playerPieceStep = 50;
+                document.getElementById('gameStatus').innerText = `تقدمت بـ ${val} خطوات على مسار اللوحة الأصلي.`;
+                if (playerPieceStep >= 50) { handleWin("player"); return; }
+            }
+
+            document.getElementById('pStepText').innerText = isPlayerOutFromBase ? `المربع ${playerPieceStep}` : "في الحاضنة";
+            gameActiveTurn = "system";
+            setTimeout(systemTurn, 1500);
+        }, 500);
+    }
+
+    function systemTurn() {
+        const dice = document.getElementById('ludoSingleDice');
+        const val = Math.floor(Math.random() * 6) + 1;
+        if (!isSystemOutFromBase) {
+            if (val === 5 || val === 6) { isSystemOutFromBase = true; systemPieceStep = 1; }
+        } else {
+            systemPieceStep += val;
+            if (systemPieceStep > 50) systemPieceStep = 50;
+            if (systemPieceStep >= 50) { handleWin("system"); return; }
+        }
+        document.getElementById('sStepText').innerText = isSystemOutFromBase ? `المربع ${systemPieceStep}` : "في الحاضنة";
+        document.getElementById('gameStatus').innerText = `الخصم ألقى النرد وتحرك خطوة تكتيكية. دورك الآن!`;
+        gameActiveTurn = "player";
+    }
+
+    function handleWin(winner) {
+        if (winner === "player") {
+            const prize = (activeMatchBet * 2) * 0.90;
+            balance += prize;
+            alert(`🏆 مبروك الفوز بالجولة! نلت ${prize} درهم بعد اقتطاع عمولة الخدمة.`);
+        } else {
+            alert("❌ انتصر الخصم هذه المرة، حظاً أوفر في التحدي القادم!");
+        }
+        document.getElementById('userBalance').innerText = balance.toFixed(2);
+        document.getElementById('gameArena').style.display = 'none';
+        document.getElementById('setupMatchArea').style.display = 'block';
     }
 </script>
 </body>
