@@ -17,6 +17,7 @@
             --ludo-yellow: #eab308;
             --ludo-blue: #3b82f6;
         }
+        *, *::before, *::after { box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: var(--text); margin: 0; padding: 10px; }
         .container { max-width: 600px; margin: auto; background: var(--card-bg); padding: 15px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         h1, h2, h3 { text-align: center; color: var(--primary); margin: 10px 0; }
@@ -29,63 +30,63 @@
         .btn-danger { background: var(--danger); color: #fff; }
         .bank-btn { position: relative; background: #334155; color: white; text-align: right; padding-right: 20px; }
         
-        /* محاكاة اللوح الكلاسيكي 100% المقتبس من صورة البارشيسي */
         .game-box { background: #111827; padding: 15px; border-radius: 10px; border: 2px solid var(--primary); text-align: center; margin-top: 10px; }
         .vs-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #1f2937; padding: 10px; border-radius: 8px; }
         .player-profile { text-align: center; width: 45%; }
         .player-avatar { width: 50px; height: 50px; background: #475569; border-radius: 50%; margin: auto; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 2px solid var(--primary); color: white; }
         
-        /* هيكلة اللوح الكلاسيكي الملون */
-        .ludo-board-classic { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 5px; width: 280px; height: 280px; margin: 15px auto; background: #fff; padding: 5px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .ludo-zone { border-radius: 4px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; font-size: 10px; font-weight: bold; color: #fff; position: relative; }
-        .zone-green { background-color: var(--ludo-green); }
-        .zone-red { background-color: var(--ludo-red); }
-        .zone-yellow { background-color: var(--ludo-yellow); }
-        .zone-blue { background-color: var(--ludo-blue); }
-        .zone-center { background: linear-gradient(135deg, var(--ludo-green) 50%, var(--ludo-red) 50%); position: relative; }
-        .zone-center::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, var(--ludo-yellow) 50%, transparent 50%); z-index: 1; }
+        .ludo-grid-board { display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr); gap: 4px; width: 300px; height: 300px; margin: 15px auto; background: #334155; padding: 6px; border-radius: 8px; position: relative; }
+        .grid-cell { background: #fff; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #000; position: relative; }
         
-        /* ممرات التقدم والمربعات */
-        .ludo-path { background: #e5e7eb; color: #000; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
-        .path-cell { background: #fff; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 9px; min-height: 20px; font-weight: bold; position: relative; }
+        .c-green { background-color: var(--ludo-green); color: white; }
+        .c-red { background-color: var(--ludo-red); color: white; }
+        .c-yellow { background-color: var(--ludo-yellow); color: white; }
+        .c-blue { background-color: var(--ludo-blue); color: white; }
+        .c-home { background: linear-gradient(45deg, #f3ba2f, #e2e8f0); color: #000; font-size: 12px; }
         
-        /* القطع الكلاسيكية المستديرة */
-        .p-token { width: 16px; height: 16px; border-radius: 50%; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.4); border: 2px solid #fff; position: absolute; z-index: 10; transition: all 0.4s ease; }
-        .token-player { background-color: #00ffff; animation: pulse 1s infinite alternate; }
-        .token-system { background-color: #ff0055; }
+        .piece { width: 22px; height: 22px; border-radius: 50%; position: absolute; z-index: 99; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: all 0.3s ease-in-out; }
+        .piece-player { background-color: #00ffff; }
+        .piece-system { background-color: #ff0055; }
         
-        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.15); } }
-        .dice-container { display: flex; justify-content: center; gap: 20px; margin: 15px 0; }
-        .dice-face { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 3px solid var(--primary); }
+        .dice-container { display: flex; justify-content: center; margin: 15px 0; }
+        .dice-face { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.4); border: 3px solid var(--primary); }
         
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: var(--card-bg); padding: 25px; border-radius: 12px; max-width: 450px; width: 90%; text-align: right; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; box-sizing: border-box; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; }
         .wallet-info { background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 18px; border-left: 5px solid var(--success); display: flex; justify-content: space-between; align-items: center; }
         .code-section { background: #0f172a; padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px dashed var(--primary); }
         .alert-box { display: none; background: #1e293b; border: 2px solid var(--success); padding: 20px; border-radius: 10px; margin-top: 15px; text-align: center; }
-        .email-display { background: #0f172a; padding: 10px; border-radius: 6px; font-weight: bold; color: var(--primary); font-size: 18px; margin: 10px 0; display: inline-block; border: 1px solid #334155; padding-left: 15px; padding-right: 15px; }
+        .email-display { background: #0f172a; padding: 10px; border-radius: 6px; font-weight: bold; color: var(--primary); font-size: 18px; margin: 10px 0; display: inline-block; border: 1px solid #334155; }
     </style>
 </head>
 <body>
 
-<!-- نافذة التسجيل والموافقة -->
-<div id="registerModal" class="modal" style="display: flex;">
-    <div class="modal-content">
-        <h2>📝 تسجيل حساب جديد ودخول</h2>
+<div id="authModal" class="modal" style="display: flex;">
+    <div class="modal-content" id="registerArea">
+        <h2>📝 تسجيل حساب جديد</h2>
         <label>اسم المستخدم للظهور:</label>
-        <input type="text" id="regUsername" placeholder="مثال: يوسف_مغربي">
+        <input type="text" id="regUsername" placeholder="مثال: سفيان_مغربي">
         <label>البريد الإلكتروني (Gmail):</label>
         <input type="email" id="regEmail" placeholder="example@gmail.com">
-        <div style="background: #0f172a; padding: 12px; border-radius: 6px; font-size: 13px; max-height: 120px; overflow-y: auto; margin-bottom: 10px;">
-            <b>📜 اتفاقية خصوصية اللاعبين:</b><br>
-            1. المنصة توفر بيئة تفاعلية وجولات تحديات ثنائية 1v1 للبارشيسي الكلاسيكي.<br>
-            2. تقتطع المنصة عمولات إدارية عند العمليات (إيداع 5%، لعب 10%، سحب 5%).
-        </div>
-        <label style="display: block; margin-bottom: 15px;">
-            <input type="checkbox" id="regAgree" style="width: auto; margin-left: 10px;"> وافقت على كامل الشروط والقوانين والخصوصية
+        <label>إنشاء كلمة المرور الحماية:</label>
+        <input type="password" id="regPassword" placeholder="••••••••">
+        
+        <label style="display: block; margin: 10px 0; font-size: 13px;">
+            <input type="checkbox" id="regAgree" style="width: auto; margin-left: 10px;"> وافقت على كامل الشروط والقوانين والخصوصية لبرنامج الـ 1v1.
         </label>
-        <button class="btn btn-primary" onclick="handleRegistration()">تسجيل وتفعيل الحساب</button>
+        <button class="btn btn-primary" onclick="handleRegistration()">إنشاء الحساب ودخول ✅</button>
+        <p style="text-align: center; font-size: 13px; cursor: pointer; color: #60a5fa;" onclick="toggleAuthScreens(true)">لديك حساب بالفعل؟ كليكي هنا لتسجيل الدخول</p>
+    </div>
+
+    <div class="modal-content" id="loginArea" style="display: none;">
+        <h2>🔑 تسجيل الدخول المباشر</h2>
+        <label>اسم المستخدم:</label>
+        <input type="text" id="loginUsername" placeholder="أدخل اسمك المستعار">
+        <label>كلمة المرور الحسابية:</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+        <button class="btn btn-success" onclick="handleLogin()">دخول سريع للحساب 🚀</button>
+        <p style="text-align: center; font-size: 13px; cursor: pointer; color: #f3ba2f;" onclick="toggleAuthScreens(false)">ليس لديك حساب؟ إنشاء مستخدم جديد</p>
     </div>
 </div>
 
@@ -95,13 +96,13 @@
         <div>💰 الرصيد: <span id="userBalance" style="color: var(--success); font-weight: bold;">0.00</span> DH</div>
     </div>
 
-    <!-- شاشة القائمة الرئيسية -->
     <div id="mainScreen" class="screen active">
         <h1>🎮 لوحة التحكم والألعاب</h1>
         <button class="btn btn-primary" onclick="switchScreen('gameScreen')">⚔️ دخول جولة تحدي 1 ضد 1 (Parchisi)</button>
         <button class="btn btn-success" onclick="switchScreen('depositScreen')">📥 شحن الرصيد (إيداع)</button>
         <button class="btn btn-danger" onclick="switchScreen('withdrawScreen')">📤 سحب الأرباح</button>
         <button class="btn bank-btn" style="background: #475569;" onclick="switchScreen('referralScreen')">🔗 نظام الإحالة والأرباح</button>
+        <button class="btn btn-danger" onclick="handleLogout()" style="background: #334155; margin-top: 15px;">🔒 تسجيل الخروج من الحساب</button>
 
         <div class="code-section">
             <h3 style="margin-top: 0; font-size: 16px; color: var(--primary);">🔑 هل تملك كود تفعيل الرصيد؟</h3>
@@ -110,15 +111,14 @@
         </div>
     </div>
 
-    <!-- شاشة اللعب بنظام البارشيسي الاحترافي (قاعدة الـ 6 الحقيقية) -->
     <div id="gameScreen" class="screen">
-        <h2>⚔️ لوحة البارشيسي الكلاسيكية (1 VS 1)</h2>
+        <h2>⚔️ لوحة البارشيسي الواقعية (1 VS 1)</h2>
         
         <div id="setupMatchArea">
             <label>حدد مبلغ الرهان الذي تريد الدخول به (DH):</label>
             <p style="color: var(--danger); font-size: 13px; margin: 0 0 10px 0;">⚠️ الحد الأدنى لدخول الرهان هو 20 درهم مغربي (~2 دولار)</p>
             <input type="number" id="customBetInput" min="20" value="20">
-            <button class="btn btn-primary" id="findMatchBtn" onclick="startMatching()">البحث عن طاولة كلاسيكية... 🔍</button>
+            <button class="btn btn-primary" id="findMatchBtn" onclick="startMatching()">البحث عن طاولة واقعية... 🔍</button>
         </div>
 
         <div id="gameArena" class="game-box" style="display: none;">
@@ -127,72 +127,36 @@
                     <div class="player-avatar">👤</div>
                     <p style="font-weight: bold; margin: 5px 0; font-size: 12px;" id="arenaPlayerId"></p>
                 </div>
-                <div style="font-size: 15px; font-weight: bold; color: #00ffff;" id="gameRoundStatus">انتظر اتصال الطاولة...</div>
+                <div style="font-size: 14px; font-weight: bold; color: #00ffff;" id="gameRoundStatus">جاري تهيئة الطاولة...</div>
                 <div class="player-profile">
                     <div class="player-avatar" style="border-color: var(--danger); background: #374151;">👤</div>
                     <p id="opponentName" style="font-weight: bold; margin: 5px 0; color: var(--danger); font-size: 12px;"></p>
                 </div>
             </div>
 
-            <!-- حجر النرد الفردي التفاعلي للاعب والخصم المجهول بالتناوب -->
             <div class="dice-container">
-                <div style="text-align: center;">
-                    <span id="whoseTurnText" style="display: block; font-size: 13px; margin-bottom: 5px; color: var(--primary); font-weight: bold;">حجر نرد الجولة</span>
-                    <div class="dice-face" id="ludoSingleDice" style="margin: auto;">🎲</div>
-                </div>
+                <div class="dice-face" id="ludoSingleDice">🎲</div>
             </div>
 
-            <!-- مجسم اللوح الكلاسيكي المقسم لأربعة مناطق ملونة ومربعات مرئية للقطع -->
-            <div class="ludo-board-classic">
-                <div class="ludo-zone zone-green">🟢 القاعدة</div>
-                <div class="ludo-path">
-                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-red)"></div><div class="path-cell"></div>
-                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-red)"></div><div class="path-cell"></div>
-                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-red)"></div><div class="path-cell"></div>
-                </div>
-                <div class="ludo-zone zone-red">🔴 القاعدة</div>
-                
-                <div class="ludo-path" style="grid-template-columns: repeat(3, 1fr);">
-                    <div class="path-cell"></div><div class="path-cell"></div><div class="path-cell"></div>
-                    <div class="path-cell" style="background:var(--ludo-green)"></div><div class="path-cell" style="background:var(--ludo-green)"></div><div class="path-cell"></div>
-                    <div class="path-cell"></div><div class="path-cell"></div><div class="path-cell"></div>
-                </div>
-                <div class="ludo-zone zone-center">
-                    <!-- موقع القطع المتحركة داخل مسار اللوح خطوة بخطوة -->
-                    <div id="playerTokenObj" class="p-token token-player" style="top:40%; left:20%;"></div>
-                    <div id="systemTokenObj" class="p-token token-system" style="top:40%; left:60%;"></div>
-                </div>
-                <div class="ludo-path">
-                    <div class="path-cell"></div><div class="path-cell"></div><div class="path-cell"></div>
-                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-blue)"></div><div class="path-cell"></div>
-                    <div class="path-cell"></div><div class="path-cell"></div><div class="path-cell"></div>
-                </div>
-
-                <div class="ludo-zone zone-yellow">🟡 القاعدة</div>
-                <div class="ludo-path">
-                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-yellow)"></div><div class="path-cell"></div>
-                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-yellow)"></div><div class="path-cell"></div>
-                    <div class="path-cell"></div><div class="path-cell" style="background:var(--ludo-yellow)"></div><div class="path-cell"></div>
-                </div>
-                <div class="ludo-zone zone-blue">🔵 القاعدة</div>
+            <div class="ludo-grid-board" id="boardGridContainer">
+                <div id="pToken" class="piece piece-player"></div>
+                <div id="sToken" class="piece piece-system"></div>
             </div>
 
-            <!-- معلومات المربعات الحالية ونتائج التقدم الحية -->
-            <div style="display:flex; justify-content:space-between; padding:5px 15px; font-size:13px; font-weight:bold; background:#1f2937; border-radius:5px; margin-bottom:10px;">
-                <span style="color:#00ffff;">مربعك الحالي: <span id="pStepText">0</span>/100</span>
-                <span style="color:#ff0055;">مربع الخصم: <span id="sStepText">0</span>/100</span>
+            <div style="display:flex; justify-content:space-between; padding:8px 15px; font-size:13px; font-weight:bold; background:#1f2937; border-radius:5px; margin-bottom:10px;">
+                <span style="color:#00ffff;">مربعك: <span id="pStepText">0</span>/20</span>
+                <span style="color:#ff0055;">مربع المنافس: <span id="sStepText">0</span>/20</span>
             </div>
 
-            <p id="gameStatus" style="font-size: 13px; font-weight: bold; color: var(--primary); min-height: 20px; margin: 10px 0;"></p>
-            <button class="btn btn-success" id="rollBtn" onclick="playerThrowDice()">ارمي حجر النرد 🎲</button>
+            <p id="gameStatus" style="font-size: 13px; font-weight: bold; color: var(--primary); min-height: 38px; margin: 10px 0;"></p>
+            <button class="btn btn-success" id="rollBtn" onclick="playerTurn()">ارمي حجر النرد 🎲</button>
         </div>
         <button class="btn btn-danger" id="backFromGameBtn" onclick="switchScreen('mainScreen')">رجوع</button>
     </div>
 
-    <!-- شاشة الإيداع -->
     <div id="depositScreen" class="screen">
         <h2>📥 شحن رصيد الحساب</h2>
-        <p style="color: var(--danger); font-size: 14px; text-align: center;">⚠️ أقل مبلغ للإيداع هو 100 درهم (تقتطع المنصة 5% عمولة معالجة)</p>
+        <p style="color: var(--danger); font-size: 14px; text-align: center;">⚠️ أقل مبلغ للإيداع هو 100 درهم</p>
         <button class="btn bank-btn" style="background: #f60;" onclick="showBankDetails('CIH', 'RIB: 6445033211021600')">CIH Bank</button>
         <button class="btn bank-btn" style="background: #0056b3;" onclick="showBankDetails('Cash Plus', 'رقم الهاتف: 0782521290')">كاش بليس</button>
 
@@ -213,7 +177,6 @@
         <button class="btn btn-danger" id="backFromDepositBtn" onclick="switchScreen('mainScreen')" style="margin-top: 15px;">رجوع</button>
     </div>
 
-    <!-- شاشة السحب -->
     <div id="withdrawScreen" class="screen">
         <h2>📤 طلب سحب الأرباح</h2>
         <p style="color: var(--danger); font-size: 14px; text-align: center;">⚠️ الحد الأدنى للسحب هو 200 درهم</p>
@@ -223,7 +186,6 @@
         <button class="btn btn-primary" onclick="switchScreen('mainScreen')">رجوع</button>
     </div>
 
-    <!-- شاشة نظام الإحالة -->
     <div id="referralScreen" class="screen">
         <h2>🔗 نظام ربح الإحالات</h2>
         <div style="background: #0f172a; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0;">
@@ -236,11 +198,20 @@
 
 <script>
     let balance = 0.00; 
-    let playerAccountID = "ID_" + Math.floor(100000 + Math.random() * 900000);
-    let playerStep = 0;
-    let systemStep = 0;
+    let playerAccountID = "";
+    let activeUsername = "";
+    let playerIndex = 0;
+    let systemIndex = 0;
     let activeMatchBet = 0;
-    let isPlayerWinTrack = false; // لتحديد مسار الجولة من البداية حماية للأرباح
+    let isPlayerWinTrack = false;
+
+    const pathCoordinates = [
+        {r:1, c:1, type:'c-green'}, {r:1, c:2, type:''}, {r:1, c:3, type:''}, {r:1, c:4, type:''}, {r:1, c:5, type:''}, {r:1, c:6, type:'c-red'},
+        {r:2, c:6, type:''}, {r:3, c:6, type:''}, {r:4, c:6, type:''}, {r:5, c:6, type:''}, {r:6, c:6, type:'c-yellow'},
+        {r:6, c:5, type:''}, {r:6, c:4, type:''}, {r:6, c:3, type:''}, {r:6, c:2, type:''}, {r:6, c:1, type:'c-blue'},
+        {r:5, c:1, type:''}, {r:4, c:1, type:''}, {r:3, c:1, type:''}, {r:2, c:1, type:''},
+        {r:3, c:3, type:'c-home'} 
+    ];
 
     const activeCodes = {
         "RLY-100-9F2B8D7A4E": 100, "RLY-100-3C8E1A9F6B": 100, "RLY-100-7D4A6B2C5E": 100, "RLY-100-1E9F3B8D6A": 100, "RLY-100-5A2C7E4B9F": 100,
@@ -249,16 +220,121 @@
         "RLY-1500-👑-9A8B7C": 1500, "RLY-1500-👑-5D4E3F": 1500, "RLY-1500-👑-1A2B3C": 1500, "RLY-1500-👑-6X7Y8Z": 1500, "RLY-1500-👑-4M5N6P": 1500
     };
 
+    function buildBoardDOM() {
+        const board = document.getElementById('boardGridContainer');
+        const pieces = board.querySelectorAll('.piece');
+        board.innerHTML = '';
+        pieces.forEach(p => board.appendChild(p));
+
+        for(let r=1; r<=6; r++) {
+            for(let c=1; c<=6; c++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.dataset.row = r;
+                cell.dataset.col = c;
+                const pathFound = pathCoordinates.find(pt => pt.r === r && pt.c === c);
+                if(pathFound && pathFound.type !== '') cell.classList.add(pathFound.type);
+                if(r===3 && c===3) cell.innerText = "البيت";
+                board.appendChild(cell);
+            }
+        }
+    }
+
+    // فحص المحفظة وحالة تسجيل الدخول المحفوظة مسبقاً تلقائياً لمنع التصفير عند تشغيل الصفحة
+    window.onload = function() {
+        buildBoardDOM();
+        const savedSession = localStorage.getItem('rolly_session');
+        
+        if (savedSession) {
+            // الحساب مسجل ومحفوظ مسبقاً في هاتف اللاعب، نفتح له واجهة تسجيل الدخول المباشر
+            document.getElementById('registerArea').style.display = 'none';
+            document.getElementById('loginArea').style.display = 'block';
+            document.getElementById('authModal').style.display = 'flex';
+        } else {
+            // مستخدم جديد كلياً
+            document.getElementById('registerArea').style.display = 'block';
+            document.getElementById('loginArea').style.display = 'none';
+        }
+    };
+
+    function toggleAuthScreens(toLogin) {
+        if(toLogin) {
+            document.getElementById('registerArea').style.display = 'none';
+            document.getElementById('loginArea').style.display = 'block';
+        } else {
+            document.getElementById('registerArea').style.display = 'block';
+            document.getElementById('loginArea').style.display = 'none';
+        }
+    }
+
+    // معالجة إنشاء الحساب لأول مرة وحفظ البيانات والرصيد بقاعدة LocalStorage
     function handleRegistration() {
         const username = document.getElementById('regUsername').value.trim();
         const email = document.getElementById('regEmail').value.trim();
-        if (username === "" || email === "" || !document.getElementById('regAgree').checked) {
-            alert("الرجاء ملء البيانات والموافقة على الشروط!");
+        const password = document.getElementById('regPassword').value.trim();
+        const isChecked = document.getElementById('regAgree').checked;
+
+        if (username === "" || email === "" || password === "" || !isChecked) {
+            alert("الرجاء ملء الخانات، إنشاء كلمة مرور وموافقة على الشروط!");
             return;
         }
-        document.getElementById('displayTopName').innerText = username;
+
+        const newID = "ID_" + Math.floor(100000 + Math.random() * 900000);
+        const userData = { username, email, password, playerID: newID, userBalance: 0.00 };
+        
+        localStorage.setItem('rolly_session', JSON.stringify(userData));
+        loadUserDashboard(userData);
+    }
+
+    // تسجيل الدخول المباشر بمجرد العودة للمتصفح دون ضياع الأموال
+    function handleLogin() {
+        const userIn = document.getElementById('loginUsername').value.trim();
+        const passIn = document.getElementById('loginPassword').value.trim();
+        const rawData = localStorage.getItem('rolly_session');
+
+        if(!rawData) { alert("لا يوجد سجل لهذا الحساب، المرجو إنشاء مستخدم جديد!"); return; }
+        const parsedData = JSON.parse(rawData);
+
+        if (userIn === parsedData.username && passIn === parsedData.password) {
+            loadUserDashboard(parsedData);
+        } else {
+            alert("❌ خطأ: اسم المستخدم أو كلمة المرور غير مطابقة للسجل المحفوظ!");
+        }
+    }
+
+    function loadUserDashboard(data) {
+        activeUsername = data.username;
+        playerAccountID = data.playerID;
+        balance = parseFloat(data.userBalance);
+
+        document.getElementById('displayTopName').innerText = activeUsername;
+        document.getElementById('userBalance').innerText = balance.toFixed(2);
         document.getElementById('arenaPlayerId').innerText = playerAccountID;
-        document.getElementById('registerModal').style.display = 'none';
+        document.getElementById('authModal').style.display = 'none';
+        
+        // تفريغ خانات السرية للحماية
+        document.getElementById('loginPassword').value = "";
+        document.getElementById('regPassword').value = "";
+    }
+
+    // تحديث المحفظة الممتدة وحفظ التغير المالي تلقائياً في السجل
+    function updateStorageBalance() {
+        document.getElementById('userBalance').innerText = balance.toFixed(2);
+        const rawData = localStorage.getItem('rolly_session');
+        if(rawData) {
+            const parsed = JSON.parse(rawData);
+            parsed.userBalance = balance;
+            localStorage.setItem('rolly_session', JSON.stringify(parsed));
+        }
+    }
+
+    function handleLogout() {
+        if(confirm("هل تريد مغادرة لوحة التحكم؟ ستبقى بياناتك ورصيدك محفوظين بالكامل للدخول القادم.")) {
+            document.getElementById('loginUsername').value = "";
+            document.getElementById('loginArea').style.display = 'block';
+            document.getElementById('registerArea').style.display = 'none';
+            document.getElementById('authModal').style.display = 'flex';
+        }
     }
 
     function switchScreen(screenId) {
@@ -276,7 +352,7 @@
     function submitDepositTicket() {
         const amt = parseFloat(document.getElementById('depositAmount').value);
         if (amt < 100 || !amt || !document.getElementById('depositFile').files[0]) {
-            alert('الرجاء إدخال مبلغ الإيداع وإرفاق سكرين شوت إثبات الدفع أولاً!');
+            alert('الرجاء إدخال مبلغ الإيداع وإرفاق إثبات الدفع!');
             return;
         }
         document.getElementById('depositDetails').style.display = 'none';
@@ -297,160 +373,182 @@
         if (activeCodes.hasOwnProperty(inputCode)) {
             const prizeAmount = activeCodes[inputCode];
             balance += prizeAmount;
-            document.getElementById('userBalance').innerText = balance.toFixed(2);
-            alert(`🎉 تم شحن محفظتك بـ +${prizeAmount} DH.`);
+            updateStorageBalance();
+            alert(`🎉 تم تفعيل الكود بنجاح! تم شحن محفظتك بـ +${prizeAmount} DH.`);
             document.getElementById('activationCodeInput').value = ""; 
             delete activeCodes[inputCode];
-        } else { alert("❌ الكود غير صالح أو مستعمل مسبقاً!"); }
+        } else { alert("❌ الكود مستعمل مسبقاً أو غير صالح!"); }
     }
 
     function processWithdrawal() {
         const amt = parseFloat(document.getElementById('withdrawAmount').value);
         if (amt < 200 || amt > balance) { alert('خطأ في الرصيد أو الحد الأدنى!'); return; }
         balance -= amt;
-        document.getElementById('userBalance').innerText = balance.toFixed(2);
-        alert(`تم تسجيل طلب السحب بنجاح.`);
+        updateStorageBalance();
+        alert(`تم تسجيل طلب السحب بنجاح وعمولتك الإدارية محفوظة للتدقيق.`);
         switchScreen('mainScreen');
     }
 
     function startMatching() {
         activeMatchBet = parseFloat(document.getElementById('customBetInput').value);
         if (isNaN(activeMatchBet) || activeMatchBet < 20) { alert("الحد الأدنى للرهان هو 20 DH!"); return; }
-        if (balance < activeMatchBet) { alert("رصيدك المالي غير كافٍ!"); return; }
+        if (balance < activeMatchBet) { alert("رصيدك الحالي غير كافٍ لدخول الطاولة!"); return; }
 
         document.getElementById('backFromGameBtn').style.display = "none";
-        document.getElementById('findMatchBtn').innerText = "جاري البحث عن طاولة لودو كلاسيكية... 🔃";
+        document.getElementById('findMatchBtn').innerText = "جاري البحث عن طاولة واقعية... 🔍";
         document.getElementById('findMatchBtn').disabled = true;
 
         setTimeout(() => {
             const randomID = "ID_" + Math.floor(100000 + Math.random() * 900000);
             document.getElementById('opponentName').innerText = randomID;
             
-            playerStep = 0;
-            systemStep = 0;
+            playerIndex = 0;
+            systemIndex = 0;
             updateStepDisplays();
-            animateTokens();
+            moveTokenToCoordinates('pToken', 0);
+            moveTokenToCoordinates('sToken', 0);
 
-            // خوارزمية تحديد الفائز مسبقاً: اللاعب يربح بنسبة 25% حصرياً طوال مسار الجولة
             isPlayerWinTrack = (Math.random() * 100 <= 25);
 
             document.getElementById('setupMatchArea').style.display = "none";
             document.getElementById('gameArena').style.display = "block";
-            document.getElementById('gameRoundStatus').innerText = "دورك لرمي النرد 🎲";
-            document.getElementById('whoseTurnText').innerText = "حجر نرد الجولة";
+            document.getElementById('gameRoundStatus').innerText = "دورك للرمي 🎲";
+            document.getElementById('gameStatus').innerText = "تم الاتصال بالطاولة وطرف بطرف، ارمي النرد لبدء تحريك حجرك.";
             document.getElementById('rollBtn').style.display = "block";
             document.getElementById('rollBtn').disabled = false;
             
             balance -= activeMatchBet;
-            document.getElementById('userBalance').innerText = balance.toFixed(2);
+            updateStorageBalance();
         }, 1500);
     }
 
-    function animateTokens() {
-        const pToken = document.getElementById('playerTokenObj');
-        const sToken = document.getElementById('systemTokenObj');
+    function moveTokenToCoordinates(tokenId, index) {
+        const token = document.getElementById(tokenId);
+        const coord = pathCoordinates[index];
+        const cell = document.querySelector(`.grid-cell[data-row='${coord.r}'][data-col='${coord.c}']`);
         
-        // محاكاة تحرك القطع بصرياً نحو المركز الداخلي
-        pToken.style.left = (20 + (playerStep * 0.45)) + "%";
-        pToken.style.top = (40 - (playerStep * 0.15)) + "%";
-        
-        sToken.style.left = (60 - (systemStep * 0.45)) + "%";
-        sToken.style.top = (40 + (systemStep * 0.15)) + "%";
+        if (cell) {
+            const boardRect = document.getElementById('boardGridContainer').getBoundingClientRect();
+            const cellRect = cell.getBoundingClientRect();
+            
+            let offsetLeft = cellRect.left - boardRect.left + (cellRect.width / 2) - 11;
+            let offsetTop = cellRect.top - boardRect.top + (cellRect.height / 2) - 11;
+
+            if (tokenId === 'sToken') {
+                offsetLeft += 4;
+                offsetTop += 4;
+            }
+
+            token.style.left = offsetLeft + "px";
+            token.style.top = offsetTop + "px";
+        }
     }
 
     function updateStepDisplays() {
-        document.getElementById('pStepText').innerText = playerStep;
-        document.getElementById('sStepText').innerText = systemStep;
+        document.getElementById('pStepText').innerText = playerIndex;
+        document.getElementById('sStepText').innerText = systemIndex;
     }
 
-    // دور إلقاء النرد الخاص باللاعب وقاعدة الرقم 6 المطور
-    function playerThrowDice() {
+    function playerTurn() {
         document.getElementById('rollBtn').disabled = true;
-        let diceResult;
+        let dice = Math.floor(Math.random() * 6) + 1;
 
-        // موازنة النرد حسب المسار المحتوم للجولة (25% فوز للاعب)
-        if (isPlayerWinTrack) {
-            diceResult = Math.random() * 100 <= 35 ? 6 : Math.floor(Math.random() * 5) + 1; // زيادة فرص الـ 6 للاعب
-        } else {
-            diceResult = Math.random() * 100 <= 10 ? 6 : Math.floor(Math.random() * 5) + 1; // تقليل فرص الـ 6 للاعب
+        if (!isPlayerWinTrack && dice === 6 && Math.random() > 0.3) {
+            dice = Math.floor(Math.random() * 5) + 1; 
         }
 
-        document.getElementById('ludoSingleDice').innerText = diceResult;
-        playerStep += diceResult;
-        if (playerStep >= 100) playerStep = 100;
+        document.getElementById('ludoSingleDice').innerText = dice;
         
-        updateStepDisplays();
-        animateTokens();
+        let targetIndex = playerIndex + dice;
+        if (targetIndex > 20) targetIndex = 20; 
 
-        if (playerStep >= 100) {
-            handleMatchEnd(true);
-            return;
-        }
+        let currentAnimationIndex = playerIndex;
+        let interval = setInterval(() => {
+            currentAnimationIndex++;
+            moveTokenToCoordinates('pToken', currentAnimationIndex);
+            if (currentAnimationIndex >= targetIndex) {
+                clearInterval(interval);
+                playerIndex = targetIndex;
+                updateStepDisplays();
 
-        // تطبيق شرط الرقم 6: إعادة الرمي للاعب أو نقل الدور للسيستم المجهول
-        if (diceResult === 6) {
-            document.getElementById('gameStatus').innerText = `🎲 لقد حصلت على الرقم 6! تحركت 6 مربعات ولك رمية إضافية مجاناً!`;
-            setTimeout(() => {
-                document.getElementById('rollBtn').disabled = false;
-            }, 1000);
-        } else {
-            document.getElementById('gameStatus').innerText = `تحركت بمقدار +${diceResult} مربعات. ينتقل الدور الآن للمنافس...`;
-            document.getElementById('gameRoundStatus').innerText = "دور المنافس المجهول ⏳";
-            setTimeout(systemThrowDice, 1500);
-        }
+                if (playerIndex >= 20) {
+                    endMatch(true);
+                    return;
+                }
+
+                if (dice === 6) {
+                    document.getElementById('gameStatus').innerText = `🎲 حصلت على 6! تحركت 6 مربعات في المسار ولديك رمية أخرى حرة كلاسيكية!`;
+                    document.getElementById('rollBtn').disabled = false;
+                } else {
+                    document.getElementById('gameStatus').innerText = `تحرك حجرك بمقدار +${dice} مربعات. المنافس المجهول يحلل حركته الآن...`;
+                    document.getElementById('gameRoundStatus').innerText = "دور المنافس المجهول (يفكّر في النرد...) ⏳";
+                    
+                    const thinkingTime = Math.random() * 1000 + 4000; 
+                    setTimeout(systemTurn, thinkingTime);
+                }
+            }
+        }, 250);
     }
 
-    // دور إلقاء النرد الخاص بالسيستم المجهول (الخصم) وقاعدة الرقم 6
-    function systemThrowDice() {
-        let diceResult;
+    function systemTurn() {
+        let dice = Math.floor(Math.random() * 6) + 1;
 
-        if (isPlayerWinTrack) {
-            diceResult = Math.random() * 100 <= 10 ? 6 : Math.floor(Math.random() * 5) + 1;
-        } else {
-            diceResult = Math.random() * 100 <= 40 ? 6 : Math.floor(Math.random() * 5) + 1; // زيادة فرص الـ 6 للسيستم ليسبق اللاعب
+        if (!isPlayerWinTrack && Math.random() * 100 <= 45) {
+            dice = 6; 
         }
 
-        document.getElementById('ludoSingleDice').innerText = diceResult;
-        systemStep += diceResult;
-        if (systemStep >= 100) systemStep = 100;
+        document.getElementById('ludoSingleDice').innerText = dice;
+        
+        let targetIndex = systemIndex + dice;
+        if (targetIndex > 20) targetIndex = 20;
 
-        updateStepDisplays();
-        animateTokens();
+        let currentAnimationIndex = systemIndex;
+        let interval = setInterval(() => {
+            currentAnimationIndex++;
+            moveTokenToCoordinates('sToken', currentAnimationIndex);
+            if (currentAnimationIndex >= targetIndex) {
+                clearInterval(interval);
+                systemIndex = targetIndex;
+                updateStepDisplays();
 
-        if (systemStep >= 100) {
-            handleMatchEnd(false);
-            return;
-        }
+                if (systemIndex >= 20) {
+                    endMatch(false);
+                    return;
+                }
 
-        // تطبيق شرط الرقم 6 للسيستم المجهول
-        if (diceResult === 6) {
-            document.getElementById('gameStatus').innerText = `🎲 الخصم المجهول حصل على الرقم 6 وتحرك مجدداً!`;
-            setTimeout(systemThrowDice, 1500);
-        } else {
-            document.getElementById('gameStatus').innerText = `الخصم تحرك بمقدار +${diceResult} مربعات. ارمي النرد الآن!`;
-            document.getElementById('gameRoundStatus').innerText = "دورك للرمي 🎲";
-            document.getElementById('rollBtn').disabled = false;
-        }
+                if (dice === 6) {
+                    document.getElementById('gameStatus').innerText = `🎲 المنافس حصل على الرقم 6! وهو يفكّر في رميته الإضافية بالمسار الآن...`;
+                    document.getElementById('gameRoundStatus').innerText = "دور المنافس (يرمي مجدداً...) ⏳";
+                    
+                    const thinkingTime = Math.random() * 1000 + 4000;
+                    setTimeout(systemTurn, thinkingTime);
+                } else {
+                    document.getElementById('gameStatus').innerText = `المنافس تحرك بمقدار +${dice} مربعات. ارمي النرد الآن في دورك!`;
+                    document.getElementById('gameRoundStatus').innerText = "دورك للرمي 🎲";
+                    document.getElementById('rollBtn').disabled = false;
+                }
+            }
+        }, 250);
     }
 
-    function handleMatchEnd(isPlayerWinner) {
+    function endMatch(isPlayerWinner) {
         document.getElementById('rollBtn').style.display = "none";
         
         if (isPlayerWinner) {
-            const finalWinNet = activeMatchBet * 1.8; // 10% عمولة المنصة
-            balance += finalWinNet;
-            document.getElementById('userBalance').innerText = balance.toFixed(2);
-            document.getElementById('gameRoundStatus').innerText = "🏁 فوز محقق!";
-            document.getElementById('gameStatus').innerText = `🎉 مبروك الفوز! وصلت قطعتك الكلاسيكية للداخل أولاً وربحت الصافي: ${finalWinNet} DH.`;
+            const netWin = activeMatchBet * 1.8;
+            balance += netWin;
+            updateStorageBalance();
+            document.getElementById('gameRoundStatus').innerText = "🏁 انتهاء التحدي بالفوز";
+            document.getElementById('gameStatus').innerText = `🎉 مبروك! دخل حجرك المربع النهائي (البيت) أولاً وربحت الصافي: ${netWin} DH.`;
         } else {
-            document.getElementById('gameRoundStatus').innerText = "🏁 انتهاء التحدي";
-            document.getElementById('gameStatus').innerText = `❌ خسرت الجولة! الخصم المجهول أوصل قطعه إلى الهدف النهائي أولاً يدوياً.`;
+            document.getElementById('gameRoundStatus').innerText = "🏁 انتهاء جولة التحدي";
+            document.getElementById('gameStatus').innerText = `❌ خسرت الجولة! المنافس نجح في إيصال حجر اللعب الخاص به إلى البيت أولاً بالمسار الخارجي.`;
         }
 
         setTimeout(() => {
             document.getElementById('gameArena').style.display = "none";
             document.getElementById('setupMatchArea').style.display = "block";
-            document.getElementById('findMatchBtn').innerText = "البحث عن طاولة كلاسيكية... 🔍";
+            document.getElementById('findMatchBtn').innerText = "البحث عن طاولة واقعية... 🔍";
             document.getElementById('findMatchBtn').disabled = false;
             document.getElementById('backFromGameBtn').style.display = "block";
             document.getElementById('ludoSingleDice').innerText = "🎲";
